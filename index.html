@@ -148,10 +148,10 @@
   .side-sub{display:none;flex-direction:column;gap:3px;margin:1px 0 3px 16px}
   .side-sub-wrap.open .side-sub{display:flex}
   .side-sub button{min-height:38px;padding:6px 10px;font-size:.82rem;font-weight:600;border-radius:9px}
-  /* Sideways view switching: only while body.is-sideways (tap-forced
-     wide mode or a real short landscape screen) does the chosen
-     entry filter what the right side shows. Everywhere else all
-     sections stay in the normal scrolling page. */
+  /* Sideways view switching: only while body.is-sideways (a real
+     short landscape screen) does the chosen entry filter what the
+     right side shows. Everywhere else all sections stay in the
+     normal scrolling page. */
   body.is-sideways.view-signatures #menu,
   body.is-sideways.view-signatures #visit,
   body.is-sideways.view-signatures footer{display:none}
@@ -210,22 +210,6 @@
      status stack down the rail exactly as on a laptop. */
   .rail-top{display:contents}
   .rail-head-meta{display:contents}
-  /* Portrait-phone helper: a real button that switches the page into
-     the sideways laptop layout WITHOUT needing the phone to rotate —
-     in-app webviews often never report a rotation, so the layout must
-     be reachable by tap. Only shown in portrait on a narrow screen
-     (see media query), and stays visible while the mode is on so it
-     doubles as the way back. */
-  .wide-toggle{
-    display:none;position:fixed;left:50%;top:100px;transform:translateX(-50%);
-    z-index:50;white-space:nowrap;cursor:pointer;
-    border:0;background:rgba(23,21,18,.92);color:#f4f1ec;
-    font:inherit;font-size:.8rem;font-weight:700;letter-spacing:.02em;
-    padding:11px 18px;border-radius:999px;min-height:44px;
-    box-shadow:0 8px 24px rgba(0,0,0,.22);
-    align-items:center;justify-content:center;
-  }
-  .wide-toggle:active{background:rgba(23,21,18,.75)}
   /* Liquid-metal splash, cut out of Frank's photo of the shop's
      wall sculpture (the same reference the rail marble came from).
      FIXED, horizontally CENTRED over the drinks column, in the
@@ -269,9 +253,9 @@
      photo behind the drinks. */
   .drink{
     position:relative;z-index:1;
-    min-height:100svh;
+    min-height:86svh;
     display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
-    padding:34px 28px 36px;text-align:center;
+    padding:20px 28px 22px;text-align:center;
     color:#16130f;
     --soft:rgba(22,19,15,.66);
     --line:rgba(22,19,15,.3);
@@ -367,9 +351,9 @@
      scrolls, on a steel pill that matches the plate and keeps
      the section's raised lettering. Its stick offset is
      layout-specific (portrait phones pin it to the very top of
-     the screen, top:0, and the sideways-mode toggle offset is
-     handled in their blocks below); group scroll-margin keeps
-     a jumped-to group clear of it. */
+     the screen, top:0; other layouts set theirs in their blocks
+     below); group scroll-margin keeps a jumped-to group clear
+     of it. */
   .menu-group{scroll-margin-top:76px}
   .menu-subnav{
     position:sticky;top:10px;z-index:6;
@@ -527,8 +511,7 @@
          the text side instead — a soft light halo behind the
          header lines and a drop-shadow under the logo (see the
          portrait rules below). The sideways layouts keep
-         the plain marble rail (see the body.wide restore below and
-         the untouched base rule). */
+         the plain marble rail (the untouched base rule). */
       background:
         linear-gradient(rgba(246,243,239,.45),rgba(246,243,239,.55)),
         url("assets/interior-studio.jpg") center 32% / cover no-repeat #eae7e1;
@@ -588,11 +571,13 @@
     .rail-visit{margin-top:16px}
     main{margin-left:0}
     /* Tight under the header, per Frank: the Signature Items
-       heading sits close under the sticky rail (just clear of
-       the sideways toggle), then the reserved --band gap with
-       the fixed splash centred in it, then the photo — the
-       first drink's photo is on screen without scrolling. */
-    .drink{min-height:94svh;padding:40px 18px 32px;--band:136px}
+       heading sits close under the sticky rail, then the reserved
+       --band gap with the fixed splash centred in it, then the
+       photo — the first drink's photo is on screen without
+       scrolling. Per-slide padding and min-height are tightened
+       (below) so the seven drinks follow each other more closely
+       when scrolling; the --band itself is unchanged. */
+    .drink{min-height:82svh;padding:20px 18px 18px;--band:136px}
     /* Signature Items heading: the Full Menu heading's font and
        weight (Cormorant Garamond 600) at 20% under its size —
        clamp(1.6rem,2.9vw,2.25rem), 80% of the menu heading's
@@ -630,9 +615,6 @@
     #menu::before{left:-24%;width:136%}
     .visit-grid{grid-template-columns:1fr}
     footer{padding:0 20px 36px}
-    /* the toggle straddles the bottom of the slimmer centred
-       header block (status / phone / Instagram only) */
-    .wide-toggle{display:inline-flex;top:196px}
     /* splash stays pinned, horizontally centred, in the band
        between the Signature Items heading above and the photo
        below — right above the drink, in the middle. The band
@@ -664,7 +646,7 @@
     .side-nav button{min-height:40px;padding:6px 9px;font-size:.85rem;gap:7px}
     .side-nav a.side-ig{min-height:40px;padding:6px 9px;font-size:.85rem;gap:7px}
     main{margin-left:184px}
-    .drink{min-height:100svh;padding:10px 22px 12px;--band:122px}
+    .drink{min-height:94svh;padding:8px 22px 10px;--band:122px}
     .drink .photo.frameless img,.drink .photo.frameless video{width:auto;height:32svh;max-width:54vw;aspect-ratio:1/1}
     .drink .photo.card img{width:auto;height:32svh;max-width:54vw}
     .drink .photo.card.wide img{height:32svh}
@@ -678,7 +660,6 @@
     .section{padding:36px 24px}
     .menu-inner{padding:0 24px}
     .visit-gallery{height:260px}
-    .wide-toggle{display:none}
     /* splash centred over the drinks column, in the band between
        the heading and the photo */
     .splash-fixed{width:111.3px;top:31px;left:calc(184px + (100vw - 184px)/2)}
@@ -695,90 +676,9 @@
     .side-nav{display:none}
   }
 
-  /* ============ TAP-FORCED SIDEWAYS VIEW (body.wide) ============
-     The laptop layout squeezed into a portrait phone screen, turned
-     on by the "Sideways view" button — no physical rotation needed.
-     The rail goes back to a fixed left column at a phone-friendly
-     width and the drinks sit beside it, exactly the arrangement
-     rotating was supposed to reveal. These rules use body.wide
-     specificity so they beat the portrait top-bar block above. */
-  body.wide .rail{
-    position:fixed;inset:0 auto 0 0;width:118px;z-index:30;
-    padding:12px 10px 10px;overflow-y:auto;overflow-x:hidden;
-    box-shadow:none;
-    /* the portrait header's interior-photo trial (above) must not
-       leak into the sideways rail: it keeps the plain marble */
-    background:#eae7e1 url("assets/rail-marble.jpg") center top / cover no-repeat;
-  }
-  body.wide .rail-top{display:block}
-  body.wide .logo-wrap{width:100%}
-  body.wide .rail-tag{display:block;margin-top:8px;font-size:.52rem;letter-spacing:.14em}
-  body.wide .rail-open{margin:5px 2px 0;font-size:.68rem}
-  body.wide .menu-btn{display:none}
-  /* the phone header's contact block belongs to the portrait
-     top-bar only — the sideways rail keeps its own visit box */
-  body.wide .rail-contact{display:none}
-  /* keep the portrait header's centring out of the slim rail:
-     tag and status stack left-aligned, as in the laptop layout */
-  body.wide .rail-head-meta{display:block}
-  body.wide .rail-open{justify-content:flex-start}
-  /* slim rail: full signature list + address box give way to the
-     simple three-entry nav, so the drinks get most of the screen */
-  body.wide .rail-collapsible{display:none}
-  body.wide .side-nav{display:flex;margin-top:12px;gap:3px}
-  body.wide .side-nav button{min-height:42px;padding:6px 7px;font-size:.72rem;gap:6px;border-radius:9px;line-height:1.25}
-  body.wide .side-nav a.side-ig{min-height:42px;padding:6px 7px;font-size:.72rem;gap:6px;border-radius:9px;line-height:1.25}
-  body.wide .side-nav a.side-ig svg{width:20px;height:20px}
-  body.wide .side-sub{margin-left:10px}
-  body.wide .side-sub button{min-height:36px;padding:5px 8px;font-size:.68rem}
-  /* the portrait-only Signature Items heading stays out of the
-     sideways layout; the first drink keeps its kicker there */
-  body.wide .seq-title{display:none}
-  body.wide #chrome-latte .kicker{display:block}
-  body.wide .rail-visit{margin-top:12px}
-  body.wide .rail-visit .box{font-size:.72rem;line-height:1.4}
-  body.wide .rail-visit b{font-size:.82rem}
-  body.wide .rail-actions{gap:10px}
-  body.wide .rail-actions a{font-size:.76rem}
-  body.wide .rail-nav{margin-top:12px}
-  body.wide .rail-label{margin:10px 2px 5px;font-size:.56rem;letter-spacing:.18em}
-  body.wide .sig-link{min-height:32px;padding:4px 7px;font-size:.76rem;gap:7px;border-radius:9px}
-  body.wide .swatch{width:13px;height:13px}
-  body.wide .sig-link .p{font-size:.92rem}
-  body.wide .rail-links{margin-top:10px;padding-top:6px}
-  body.wide .rail-links a{min-height:32px;padding:4px 7px;font-size:.8rem}
-  body.wide main{margin-left:118px}
-  body.wide .drink{min-height:100svh;padding:62px 12px 64px;--band:90px}
-  body.wide .drink .photo.frameless img,body.wide .drink .photo.frameless video{width:min(218px,100%)}
-  body.wide .drink .photo.card img{width:min(218px,100%)}
-  body.wide .drink .photo.card.wide img{width:min(226px,100%)}
-  body.wide .drink h2{font-size:1.6rem;margin-top:12px}
-  body.wide .drink .desc{margin-top:6px;font-size:.85rem;line-height:1.45}
-  body.wide .drink .price{margin-top:6px;font-size:1.25rem}
-  body.wide .drink .count{margin-top:10px}
-  body.wide .drink .plaque-mark{font-size:2.6rem}
-  body.wide .drink .rule{margin-top:12px}
-  body.wide .scroll-hint{display:none}
-  body.wide .section{padding:36px 16px}
-  body.wide .menu-inner{padding:0 16px}
-  /* sideways mode keeps its toggle pinned at the top centre of
-     the content column (top:12px, 44px tall) — the sticky menu
-     bar parks below it, and jumped-to groups land clear of both */
-  body.wide .menu-subnav{top:64px}
-  body.wide .menu-group{scroll-margin-top:126px}
-  body.wide .visit-gallery{height:240px}
-  body.wide .visit-grid{grid-template-columns:1fr}
-  body.wide footer{padding:0 16px 84px}
-  /* keep the toggle reachable at the top, centred over the drink column */
-  body.wide .wide-toggle{left:calc(50% + 59px);top:12px}
-  /* splash shrinks and sits centred over the drink column, below
-     the toggle and the heading, in the band above the photo */
-  body.wide .splash-fixed{width:75px;top:84px;left:calc(118px + (100vw - 118px)/2)}
 </style>
 </head>
 <body>
-
-<button class="wide-toggle" id="wideToggle" type="button" aria-pressed="false">⇄ Sideways view — the laptop layout</button>
 
 <img class="splash-fixed" src="assets/chrome-splash.png" alt="" aria-hidden="true" width="922" height="857" />
 
@@ -1216,37 +1116,13 @@ function syncRailToOrientation(){if(!isPortraitPhone())closeRail();}
 window.addEventListener('orientationchange',function(){setTimeout(syncRailToOrientation,60);});
 window.addEventListener('resize',syncRailToOrientation);
 
-/* Tap-forced sideways view: some in-app webviews never rotate, so the
-   laptop layout must be reachable by tap alone. The button toggles
-   body.wide, which restyles the page into rail-left / drinks-right
-   inside the portrait screen. If the phone really does rotate into a
-   landscape viewport, the genuine landscape CSS takes over and the
-   forced mode clears itself. */
-var wideToggle=document.getElementById('wideToggle');
-function setWide(on){
-  document.body.classList.toggle('wide',on);
-  wideToggle.setAttribute('aria-pressed',on?'true':'false');
-  wideToggle.textContent=on?'✕ Back to phone view':'⇄ Sideways view — the laptop layout';
-  if(on)closeRail();
-}
-wideToggle.addEventListener('click',function(){
-  setWide(!document.body.classList.contains('wide'));
-});
-function clearWideOnRealLandscape(){
-  if(document.body.classList.contains('wide')&&window.innerWidth>window.innerHeight){
-    setWide(false);
-  }
-}
-window.addEventListener('orientationchange',function(){setTimeout(clearWideOnRealLandscape,60);});
-window.addEventListener('resize',clearWideOnRealLandscape);
-
 /* Logo: the white-to-chrome sequence is pure CSS on the flat
    logo's layers (see .logo-stage) — it plays once on load, then
    holds on the finished chrome; reduced-motion visitors get the
    finished logo with no animation. */
 
-/* Sideways three-entry nav: active only in the sideways layouts
-   (tap-forced wide mode, or a real short landscape phone screen).
+/* Sideways three-entry nav: active only in the sideways layout
+   (a real short landscape phone screen).
    Picking an entry shows only that part on the right — Signature
    Items = the signature sequence, Full Menu = the menu section,
    Visit Us = the visit section as it already is. Leaving sideways
@@ -1298,15 +1174,12 @@ sideSubBtns.forEach(function(b){
 });
 var landscapeMq=window.matchMedia('(orientation: landscape) and (max-height: 560px) and (max-width: 1099px)');
 function syncSideways(){
-  var on=document.body.classList.contains('wide')||landscapeMq.matches;
-  document.body.classList.toggle('is-sideways',on);
+  document.body.classList.toggle('is-sideways',landscapeMq.matches);
 }
 document.body.classList.add('view-signatures');
 syncSideways();
 window.addEventListener('resize',syncSideways);
 window.addEventListener('orientationchange',function(){setTimeout(syncSideways,60);});
-var wideToggleBtn=document.getElementById('wideToggle');
-if(wideToggleBtn)wideToggleBtn.addEventListener('click',function(){setTimeout(syncSideways,0);});
 
 /* Full Menu sub-nav: on portrait phones the sticky bar now pins
    to the very top of the screen (top:0 in the portrait CSS block),
@@ -1320,7 +1193,6 @@ function syncSubnavTop(){
 window.addEventListener('resize',syncSubnavTop);
 window.addEventListener('load',syncSubnavTop);
 window.addEventListener('orientationchange',function(){setTimeout(syncSubnavTop,80);});
-if(wideToggle)wideToggle.addEventListener('click',function(){setTimeout(syncSubnavTop,0);});
 syncSubnavTop();
 
 /* Sub-nav active state: light up the entry for whichever menu
