@@ -1,0 +1,1358 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<meta name="description" content="Chrome Coffee Studio, 2734 Sepulveda Blvd, Torrance. Cream-top lattes, ceremonial matcha, fresh pastries. Open daily 7am–6pm." />
+<link rel="icon" href="data:," />
+<title>Chrome Coffee Studio — Torrance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --rail:#d9d7d2;
+    --rail-ink:#171512;
+    --rail-soft:rgba(23,21,18,.62);
+    --rail-line:rgba(23,21,18,.16);
+    --page:#f4f1ec;
+    --page-ink:#1b1815;
+    --page-soft:rgba(27,24,21,.62);
+    --page-line:rgba(27,24,21,.12);
+    --seq-bg:#c2a287;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --page:#1d1a17;
+      --page-ink:#f0ebe3;
+      --page-soft:rgba(240,235,227,.62);
+      --page-line:rgba(240,235,227,.14);
+    }
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--page);color:var(--page-ink);-webkit-font-smoothing:antialiased}
+  button,[role="button"],a{min-height:36px}
+  img,video{display:block;max-width:100%}
+  a{color:inherit}
+
+  /* ================= RAIL ================= */
+  .rail{
+    position:fixed;inset:0 auto 0 0;width:324px;z-index:30;
+    /* Light marble rail, matched to the shop itself: the texture is
+       cut from Frank's photo of the shop's actual wall — the soft,
+       cloudy light-grey marble/plaster the chrome drip sculpture
+       hangs on (texture only, no sculpture) — softened and whitened
+       so the logo and nav stay clearly readable on top of it. Left
+       rail only — the right side keeps its clean per-drink colour.
+       (A full studio photo sat behind the rail briefly; it read too
+       busy at this width and was taken back off.) */
+    background:#eae7e1 url("assets/rail-marble.jpg") center top / cover no-repeat;
+    color:var(--rail-ink);
+    display:flex;flex-direction:column;
+    padding:22px 24px 16px;
+    overflow-y:auto;overscroll-behavior:contain;
+  }
+  .logo-wrap{position:relative;flex:0 0 auto;width:100%}
+  /* Logo: the white-to-chrome sequence, done on the FLAT logo.
+     The earlier clip had been rendered off a curved cup shot, so
+     its letters came out warped — arched like they were wrapping
+     around the cup. This version stacks the flat logo's own layers
+     (all cut from the original flat artwork, assets/logo.png):
+     outline, white fill, and the original rendered chrome fill
+     with its real reflections and drips. Same sequence as before —
+     outline first, white fill, then a sheen passes and the chrome
+     fills the letters left to right, bright silver grade — but the
+     letterforms stay exactly as flat and straight as the original,
+     and COFFEE STUDIO never changes. Plays once, then holds on the
+     finished flat logo. Every layer is transparent, so the artwork
+     sits directly on the marble rail — no box, no white rectangle. */
+  .logo-stage{position:relative;width:100%;aspect-ratio:1000/396}
+  .logo-stage img{display:block}
+  .logo-studio-l{position:absolute;left:0;top:64.14%;width:100%;height:auto}
+  .logo-outline-l,.logo-white-l{position:absolute;left:0;top:0;width:100%;height:auto}
+  .logo-outline-l{animation:logoOutline 3s ease .15s both}
+  .logo-white-l{animation:logoWhite 3s ease .15s both}
+  .logo-chrome-clip{
+    position:absolute;left:0;top:0;width:100%;height:64.14%;
+    animation:logoChrome 3s cubic-bezier(.6,.05,.3,1) .15s both;
+  }
+  .logo-chrome-clip img{width:100%;height:100%;filter:brightness(1.06) saturate(.9)}
+  /* the sheen is masked by the flat letter silhouette itself, so
+     the light only ever travels inside the word "chrome" */
+  .logo-sheen{
+    position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(100deg,transparent 42%,rgba(255,255,255,.95) 50%,transparent 58%);
+    -webkit-mask:url("assets/logo-chrome-white.png") 0 0 / 100% 100% no-repeat;
+    mask:url("assets/logo-chrome-white.png") 0 0 / 100% 100% no-repeat;
+    animation:logoSheen 3s ease .15s both;
+  }
+  @keyframes logoOutline{0%{opacity:0}16%{opacity:1}100%{opacity:1}}
+  @keyframes logoWhite{0%,20%{opacity:0}42%{opacity:1}100%{opacity:1}}
+  @keyframes logoChrome{0%,42%{clip-path:inset(-2% 100.5% -2% -2%)}90%,100%{clip-path:inset(-2% -2% -2% -2%)}}
+  @keyframes logoSheen{0%,42%{transform:translateX(-105%);opacity:0}50%{opacity:.85}84%{opacity:.85}90%,100%{transform:translateX(105%);opacity:0}}
+  @media (prefers-reduced-motion: reduce){
+    .logo-outline-l,.logo-white-l,.logo-chrome-clip,.logo-sheen{animation:none}
+    .logo-sheen{display:none}
+  }
+  /* Instagram entry in the rail link list: the Sodam treatment —
+     the real-colour gradient glyph (yellow → orange → pink →
+     purple → blue) with its soft pink shadow, beside the word
+     Instagram, as a full rail-links row alongside Full menu and
+     Visit us. Directions stays a plain text link in the address
+     box, unchanged. */
+  .rail-links a.ig-link .ig-left{
+    display:inline-flex;align-items:center;gap:9px;
+    color:inherit;font-weight:700;
+  }
+  .rail-links a.ig-link svg{flex:none;display:block;border-radius:7px;box-shadow:0 3px 10px rgba(214,41,118,.38),0 1px 3px rgba(150,47,191,.28)}
+  .rail-links a.ig-link:hover svg{box-shadow:0 4px 14px rgba(214,41,118,.5),0 1px 4px rgba(150,47,191,.35)}
+  /* Sideways-only three-entry nav (Signature Items / Full Menu /
+     Visit Us). Hidden in the normal layouts; the slim sideways
+     rail shows it instead of the full signature list. */
+  .side-nav{display:none;flex-direction:column;gap:4px;margin-top:16px;flex:0 0 auto}
+  .side-nav button{
+    display:flex;align-items:center;gap:9px;width:100%;cursor:pointer;
+    border:1px solid transparent;border-radius:11px;background:transparent;
+    color:inherit;font:inherit;font-size:.9rem;font-weight:700;text-align:left;
+    padding:8px 11px;min-height:44px;
+  }
+  .side-nav button:hover{background:rgba(255,255,255,.35)}
+  .side-nav button.active{background:rgba(255,255,255,.55);border-color:var(--rail-line)}
+  /* Instagram row in the sideways nav: the sideways layouts hide
+     .rail-collapsible (which holds the desktop rail-links
+     Instagram entry), so without this row the sideways rail had
+     no Instagram link at all. Styled as a fourth side-nav entry,
+     same brand-gradient glyph as the other Instagram links. */
+  .side-nav a.side-ig{
+    display:flex;align-items:center;gap:9px;width:100%;
+    border:1px solid transparent;border-radius:11px;background:transparent;
+    color:inherit;font-size:.9rem;font-weight:700;text-align:left;
+    padding:8px 11px;min-height:44px;text-decoration:none;
+  }
+  .side-nav a.side-ig:hover{background:rgba(255,255,255,.35)}
+  .side-nav a.side-ig svg{flex:none;display:block;border-radius:6px;box-shadow:0 3px 10px rgba(214,41,118,.38),0 1px 3px rgba(150,47,191,.28)}
+  /* Full Menu expands in place: its three categories (Drinks /
+     Pastries / Merchandise) nest, indented, under the entry and
+     show only while expanded. The script opens them whenever the
+     menu view is active; tapping Full Menu again once you're in
+     the menu view toggles them shut / open. */
+  .side-sub-wrap{display:flex;flex-direction:column;gap:4px}
+  .side-nav .caret{
+    margin-left:auto;flex:0 0 auto;width:7px;height:7px;
+    border-right:2px solid currentColor;border-bottom:2px solid currentColor;
+    transform:rotate(-45deg);opacity:.55;transition:transform .2s ease;
+  }
+  .side-sub-wrap.open .caret{transform:rotate(45deg)}
+  .side-sub{display:none;flex-direction:column;gap:3px;margin:1px 0 3px 16px}
+  .side-sub-wrap.open .side-sub{display:flex}
+  .side-sub button{min-height:38px;padding:6px 10px;font-size:.82rem;font-weight:600;border-radius:9px}
+  /* Sideways view switching: only while body.is-sideways (tap-forced
+     wide mode or a real short landscape screen) does the chosen
+     entry filter what the right side shows. Everywhere else all
+     sections stay in the normal scrolling page. */
+  body.is-sideways.view-signatures #menu,
+  body.is-sideways.view-signatures #visit,
+  body.is-sideways.view-signatures footer{display:none}
+  body.is-sideways.view-menu #sequence,
+  body.is-sideways.view-menu #visit,
+  body.is-sideways.view-menu footer{display:none}
+  body.is-sideways.view-visit #sequence,
+  body.is-sideways.view-visit #menu{display:none}
+  body.is-sideways.view-menu #menu,
+  body.is-sideways.view-visit #visit{min-height:100svh}
+  .rail-tag{margin:12px 2px 0;font-size:.7rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--rail-soft)}
+  .rail-open{margin:6px 2px 0;font-size:.85rem;font-weight:600;display:flex;align-items:center;gap:8px}
+  /* Portrait-phone contact block (phone / Instagram only — the
+     address and Directions live in the Visit Us section, per
+     Frank), shown only in the stacked phone header — see the
+     portrait block below. Hidden in every other layout. */
+  .rail-contact{display:none}
+  /* Portrait-phone section nav: the three entries the hamburger
+     panel opens to on a phone (Signature Items / Full Menu /
+     Visit Us). Only ever shown inside the portrait collapsible
+     panel — see the portrait block below. */
+  .phone-nav{display:none}
+  .dot{width:8px;height:8px;border-radius:50%;background:#8a8a8a;flex:0 0 auto}
+  .dot.open{background:#2e7d43}
+  .dot.closed{background:#b0492f}
+
+  .rail-nav{margin-top:18px;flex:0 0 auto}
+  .rail-label{margin:12px 2px 6px;font-size:.66rem;font-weight:800;letter-spacing:.26em;text-transform:uppercase;color:var(--rail-soft)}
+  .rail-label:first-child{margin-top:0}
+  .sig-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+  .sig-link{
+    display:flex;align-items:center;gap:11px;text-decoration:none;
+    border:1px solid transparent;border-radius:11px;
+    padding:6px 11px;min-height:40px;font-size:.9rem;font-weight:700;
+  }
+  .sig-link:hover{background:rgba(255,255,255,.35)}
+  .sig-link.active{background:rgba(255,255,255,.55);border-color:var(--rail-line)}
+  .swatch{width:18px;height:18px;border-radius:50%;flex:0 0 auto;border:1px solid rgba(23,21,18,.25)}
+  .sig-link .p{margin-left:auto;font-family:"Cormorant Garamond",serif;font-size:1.08rem;font-weight:600}
+  .rail-links{list-style:none;margin:12px 0 0;padding:8px 0 0;border-top:1px solid var(--rail-line);display:flex;flex-direction:column;gap:2px}
+  .rail-links a{
+    display:flex;align-items:center;justify-content:space-between;
+    text-decoration:none;font-weight:700;font-size:.93rem;padding:7px 11px;border-radius:11px;min-height:40px;
+  }
+  .rail-links a:hover{background:rgba(255,255,255,.35)}
+  .rail-links a span{color:var(--rail-soft);font-weight:600}
+
+  .rail-visit{margin-top:18px;flex:0 0 auto}
+  .rail-visit .box{border-top:1px solid var(--rail-line);padding-top:10px;font-size:.82rem;line-height:1.45}
+  .rail-visit b{font-size:.93rem}
+  .rail-visit a{font-weight:700}
+  .rail-actions{display:flex;gap:14px;margin-top:7px;flex-wrap:wrap}
+  .rail-actions a{font-weight:800;font-size:.84rem;min-height:36px;display:inline-flex;align-items:center}
+  .menu-btn{display:none}
+  /* Desktop / landscape: rail header wrappers dissolve so logo, tag and
+     status stack down the rail exactly as on a laptop. */
+  .rail-top{display:contents}
+  .rail-head-meta{display:contents}
+  /* Portrait-phone helper: a real button that switches the page into
+     the sideways laptop layout WITHOUT needing the phone to rotate —
+     in-app webviews often never report a rotation, so the layout must
+     be reachable by tap. Only shown in portrait on a narrow screen
+     (see media query), and stays visible while the mode is on so it
+     doubles as the way back. */
+  .wide-toggle{
+    display:none;position:fixed;left:50%;top:100px;transform:translateX(-50%);
+    z-index:50;white-space:nowrap;cursor:pointer;
+    border:0;background:rgba(23,21,18,.92);color:#f4f1ec;
+    font:inherit;font-size:.8rem;font-weight:700;letter-spacing:.02em;
+    padding:11px 18px;border-radius:999px;min-height:44px;
+    box-shadow:0 8px 24px rgba(0,0,0,.22);
+    align-items:center;justify-content:center;
+  }
+  .wide-toggle:active{background:rgba(23,21,18,.75)}
+  /* Liquid-metal splash, cut out of Frank's photo of the shop's
+     wall sculpture (the same reference the rail marble came from).
+     FIXED, horizontally CENTRED over the drinks column, in the
+     band between each drink's heading ("Signature · On the
+     Plaque") and the top of its photo — right above the drink, in
+     the middle. It stays exactly there while the drinks scroll
+     underneath it, like it's mounted on the glass; each drink
+     reserves that band (see --band on .drink) so in the settled
+     view the splash overlaps neither the heading nor the photo.
+     The artwork is Frank's approved clean-edged cut-out
+     (chrome-splash-cutout-tight, 922×857, transparent): the
+     outline was rebuilt as a smoothed curve at double resolution
+     and the edge pixels decontaminated, so no fringe or halo
+     shows on any drink colour. Displayed 10% larger again
+     (a second +10% round) in every layout; each layout's
+     reserved --band grew by the height the splash gained, so
+     it still clears both the heading above and the photo
+     below. A soft two-layer
+     contact shadow seats the metal on whatever colour is behind
+     it. It fades out
+     once the signature sequence has scrolled away, so it never
+     sits over the menu or visit text. Purely decorative — it
+     never takes clicks. */
+  .splash-fixed{
+    position:fixed;top:62px;left:calc(324px + (100vw - 324px)/2);transform:translateX(-50%);
+    z-index:20;pointer-events:none;
+    width:181.5px;height:auto;
+    filter:drop-shadow(0 10px 14px rgba(24,14,4,.28)) drop-shadow(0 2px 3px rgba(24,14,4,.20));
+    transition:opacity .45s ease;
+  }
+  .splash-fixed.gone{opacity:0}
+
+  /* ================= MAIN / SIGNATURE SEQUENCE ================= */
+  main{margin-left:324px}
+  .sequence{
+    position:relative;
+    background-color:var(--seq-bg);
+    transition:background-color .9s ease;
+  }
+  /* Right side is just the clean per-drink colour — no backdrop
+     photo behind the drinks. */
+  .drink{
+    position:relative;z-index:1;
+    min-height:100svh;
+    display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+    padding:34px 28px 36px;text-align:center;
+    color:#16130f;
+    --soft:rgba(22,19,15,.66);
+    --line:rgba(22,19,15,.3);
+    /* the reserved band between the heading and the photo (or the
+       text-only plaque mark) where the fixed splash sits */
+    --band:197px;
+  }
+  .drink.dark{color:#f5efe6;--soft:rgba(245,239,230,.76);--line:rgba(245,239,230,.42)}
+  .drink .kicker{margin:0;font-size:.68rem;font-weight:800;letter-spacing:.3em;text-transform:uppercase;color:var(--soft)}
+  /* "Signature Items" section heading: sits at the top of the
+     first drink in the phone portrait layout only (see the
+     portrait block), set in the Full Menu heading's font and
+     weight — Cormorant Garamond 600 — at 20% under its size
+     (clamp(1.6rem,2.9vw,2.25rem), set in the portrait block),
+     so it reads clearly subordinate to the logo. Hidden in every other
+     layout, where the first drink keeps its kicker. */
+  .seq-title{display:none}
+  .drink .photo{margin-top:var(--band)}
+  .drink .photo.frameless img,.drink .photo.frameless video{width:min(480px,84vw);height:auto;aspect-ratio:1/1;object-fit:cover}
+  .drink .photo.card img{
+    width:min(430px,84vw);height:auto;aspect-ratio:4/5;object-fit:cover;object-position:center;
+    border-radius:18px;box-shadow:0 24px 48px rgba(30,18,8,.22),0 4px 14px rgba(30,18,8,.12);
+  }
+  .drink .photo.card.wide img{aspect-ratio:5/4;width:min(470px,86vw)}
+  .drink h2{
+    font-family:"Cormorant Garamond",serif;font-weight:600;
+    font-size:clamp(2.4rem,5vw,3.8rem);line-height:1.02;margin:22px 0 0;
+  }
+  .drink .desc{margin:10px auto 0;max-width:430px;font-size:1rem;line-height:1.55;color:var(--soft)}
+  .drink .price{font-family:"Cormorant Garamond",serif;font-size:1.55rem;font-weight:600;margin-top:10px}
+  .drink .count{margin:20px 0 0;font-size:.76rem;font-weight:700;letter-spacing:.28em;color:var(--soft)}
+  /* text-only moments (signatures with no photo on file) */
+  .drink .plaque-mark{
+    margin-top:var(--band);font-family:"Cormorant Garamond",serif;font-style:italic;font-weight:500;
+    font-size:clamp(4.2rem,10vw,7rem);line-height:1;color:var(--soft);
+  }
+  .drink .rule{width:56px;height:1px;background:var(--line);margin:26px auto 0}
+  .scroll-hint{margin:26px 0 0;font-size:.72rem;font-weight:800;letter-spacing:.3em;text-transform:uppercase;color:var(--soft);animation:hintFloat 2.4s ease-in-out infinite}
+  @keyframes hintFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+  /* gentle scroll-in: fade / rise / settle */
+  .drink .rise{opacity:0;transform:translateY(26px);transition:opacity .8s ease,transform .8s cubic-bezier(.22,.8,.3,1)}
+  .drink .rise.d1{transition-delay:.05s}
+  .drink .rise.d2{transition-delay:.16s}
+  .drink .rise.d3{transition-delay:.27s}
+  .drink .rise.d4{transition-delay:.38s}
+  .drink .photo.rise{transform:translateY(30px) scale(1.025)}
+  .drink.inview .rise{opacity:1;transform:none}
+  @media (prefers-reduced-motion: reduce){
+    .scroll-hint{animation:none}
+    .drink .rise{opacity:1;transform:none;transition:none}
+    html{scroll-behavior:auto}
+  }
+
+  /* ================= MENU + VISIT ================= */
+  .section{padding:72px 28px;max-width:860px;margin:0 auto}
+  .section h2{font-family:"Cormorant Garamond",serif;font-weight:600;font-size:clamp(2rem,3.6vw,2.8rem);margin:0 0 6px;line-height:1.05}
+  .section .sub{margin:0 0 34px;color:var(--page-soft);font-size:.98rem;line-height:1.55;max-width:520px}
+  .menu-group{margin:0 0 36px}
+  .menu-group h3{margin:0 0 6px;font-size:.7rem;font-weight:800;letter-spacing:.26em;text-transform:uppercase;color:var(--page-soft)}
+  .menu-list{list-style:none;margin:0;padding:0}
+  .menu-list li{display:flex;align-items:center;gap:14px;padding:13px 2px;border-bottom:1px solid var(--page-line)}
+  .menu-list li:last-child{border-bottom:0}
+  .menu-list .info b{font-size:1.02rem;font-weight:700;display:block}
+  .menu-list .info small{color:var(--page-soft);font-size:.86rem;line-height:1.45;display:block;margin-top:2px}
+  .menu-list .price{margin-left:auto;font-family:"Cormorant Garamond",serif;font-size:1.3rem;font-weight:600;white-space:nowrap}
+  /* Photo thumbnail on the LEFT of a menu row: one uniform
+     square, rounded corners, vertically centred against the
+     name/description block. Thumbnails are the genuine Clover
+     photo where Clover has one; the six drinks Clover has no
+     photo for (Coldbrew Latte, Banana Cream Latte, Banana Cream
+     Matcha, Espresso Matcha, Coconut Mocha, Mocha Creamtop) use
+     our studio photos with ONLY the backdrop replaced by the one
+     clean light off-white of the Clover photos (cup, drink and
+     logo pixels untouched), so every drink row has a photo and
+     the whole drinks list shares one background. Rows with no
+     photo anywhere (Passion Fruit, and the Tumbler / Shirt /
+     Hoodie rows) simply omit the img — no placeholder box.
+     (The Mug row's photo is Clover's own shot of the shop's
+     branded black mug.) */
+  .menu-list .menu-thumb{
+    width:60px;height:60px;flex:0 0 60px;object-fit:cover;border-radius:10px;
+    box-shadow:0 4px 10px rgba(4,5,7,.28);
+  }
+  /* Sold-out pastries: the price slot carries the words instead
+     of a price, set in the UI sans so it reads as a status. */
+  .menu-list .price.sold-out{
+    font-family:"Manrope",sans-serif;font-size:.78rem;font-weight:800;
+    letter-spacing:.07em;text-transform:uppercase;
+  }
+  .note{font-size:.8rem;color:var(--page-soft);line-height:1.55;margin:6px 0 0}
+  /* Sticky sub-nav at the top of the Full Menu: three jumps —
+     Drinks / Pastries / Merchandise — pinned while the menu
+     scrolls, on a steel pill that matches the plate and keeps
+     the section's raised lettering. Its stick offset is
+     layout-specific (portrait phones pin it to the very top of
+     the screen, top:0, and the sideways-mode toggle offset is
+     handled in their blocks below); group scroll-margin keeps
+     a jumped-to group clear of it. */
+  .menu-group{scroll-margin-top:76px}
+  .menu-subnav{
+    position:sticky;top:10px;z-index:6;
+    display:flex;gap:4px;margin:0 0 28px;padding:6px;
+    border-radius:12px;
+    background:linear-gradient(90deg,rgba(74,80,85,.94),rgba(168,175,178,.96) 45%,rgba(198,204,207,.96) 62%,rgba(122,128,131,.94));
+    border:1px solid rgba(18,16,13,.4);
+    box-shadow:0 6px 16px rgba(4,5,7,.25),inset 0 1px 0 rgba(255,255,255,.5);
+  }
+  .menu-subnav a{
+    flex:1 1 0;display:inline-flex;align-items:center;justify-content:center;
+    min-height:40px;padding:8px 6px;border-radius:8px;
+    text-decoration:none;font-size:.8rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
+    border:1px solid transparent;white-space:nowrap;
+  }
+  .menu-subnav a:hover{background:rgba(255,255,255,.28)}
+  .menu-subnav a.active{background:rgba(255,255,255,.45);border-color:rgba(18,16,13,.35)}
+
+  /* ================= FULL MENU — THE POLISHED PLATE =================
+     Built from Frank's reference photo of polished metal: ONE
+     smooth surface of wide, SOFT vertical light bands — near-black
+     at the left edge flowing into broad silver mid-tones, one
+     brighter soft highlight column right of centre, a faint warm
+     band at the far right — with a fine horizontal brushed grain
+     (the plate texture, soft-light) laid over the bands. No hard
+     narrow stripes, and no separate sheen streak: the earlier
+     passes failed because a moving highlight fought the static
+     ones. Here the light is a single painted surface on
+     #menu::before, a touch wider than the section; as the visitor
+     scrolls, the script at the bottom of the page drifts the
+     WHOLE band pattern a few pixels sideways — the entire surface
+     shifting at once — and reduced-motion visitors get it at
+     rest. The band values follow the reference's own colour: a
+     deep blue-grey left edge, a faint warm taupe swell on the
+     rise, one soft bright column right of centre, and a right
+     side that falls away dark again. Every ramp is LONG and
+     even — no dip, no bump, no steep fall anywhere — so the
+     side bands melt into the middle with no visible seam line,
+     and the whole plate sits a shade darker than the previous
+     pass: the bright crest is a soft silver-grey, not off-white,
+     and both edges end deep.
+     Every word in the section is RAISED off the plate, not cut
+     into it: a fine light catch runs along the TOP edge of each
+     letter (the face of the letter catching the light) and a
+     soft dark shadow falls BELOW it (the letter standing proud
+     of the surface). That is the classic two-part text-shadow
+     below — light offset up, dark offset down — set once on
+     #menu so it inherits to the heading, group labels, item
+     names, descriptions, prices and the footnote alike; the big
+     heading stands a touch taller, the small print a touch
+     lower so it stays readable. The dark --page-soft /
+     --page-line values are re-scoped to this section only. On
+     narrow screens the pattern is shifted so its darkest slice
+     falls off-canvas and the lettering lands on mid silver (see
+     the portrait block below). */
+  #menu{
+    /* overflow:clip (not hidden): clips the wide plate layers the
+       same way, but creates no scroll container, so the sticky
+       menu sub-nav inside can pin to the viewport. */
+    position:relative;overflow:hidden;overflow:clip;
+    max-width:none;margin:0;padding-left:0;padding-right:0;
+    background-color:#646b71;
+    color:#12100d;
+    text-shadow:0 -1px 1px rgba(255,255,255,.8),0 1px 2px rgba(4,5,7,.5);
+    --page-soft:rgba(18,16,13,.78);
+    --page-line:rgba(18,16,13,.42);
+    --drift:0px;
+  }
+  #menu h2{
+    text-shadow:0 -1px 1px rgba(255,255,255,.85),0 2px 3px rgba(4,5,7,.5),0 1px 1px rgba(4,5,7,.35);
+  }
+  #menu .sub,#menu .note,#menu .menu-list .info small{
+    text-shadow:0 -1px 1px rgba(255,255,255,.7),0 1px 2px rgba(4,5,7,.4);
+  }
+  #menu::before{
+    content:"";position:absolute;top:0;bottom:0;left:-4%;width:108%;z-index:0;pointer-events:none;
+    background:linear-gradient(90deg,
+      #121518 0%, #1e2226 6%, #33383d 12%, #4e5459 18%,
+      #6b6f6d 24%, #8a8880 30%, #939a9d 36%, #a2a9ad 43%,
+      #b0b7ba 50%, #c0c7ca 57%, #d2d8da 63%, #dde3e4 67%,
+      #d3d9db 71%, #b4bcc0 78%, #939ca1 85%, #7e8380 91%,
+      #767c7e 96%, #6a7176 100%);
+    transform:translate3d(var(--drift),0,0);
+    will-change:transform;
+  }
+  #menu::after{
+    content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+    background:url("assets/metal-plate.jpg") center / cover no-repeat;
+    mix-blend-mode:soft-light;opacity:.9;
+  }
+  .menu-inner{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:0 28px}
+
+  .visit-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:34px;align-items:start}
+  .visit-grid img{width:100%;height:auto;border-radius:14px}
+  .visit-facts{list-style:none;margin:0;padding:0}
+  .visit-facts li{padding:13px 2px;border-bottom:1px solid var(--page-line);font-size:.96rem;line-height:1.55}
+  .visit-facts li:last-child{border-bottom:0}
+  .visit-facts b{display:block;font-size:.68rem;font-weight:800;letter-spacing:.24em;text-transform:uppercase;color:var(--page-soft);margin-bottom:4px}
+  .visit-facts a{font-weight:700}
+  .visit-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+  .visit-actions a{
+    display:inline-flex;align-items:center;justify-content:center;text-decoration:none;
+    border-radius:999px;padding:11px 20px;font-size:.9rem;font-weight:700;min-height:44px;
+    border:1px solid var(--page-ink);
+  }
+  .visit-actions a.solid{background:var(--page-ink);color:var(--page)}
+  /* Visit gallery — a sideways-scrolling photo strip inside Visit.
+     Native horizontal scroll with snap; every photo keeps its own
+     natural aspect ratio (fixed strip height, auto width, no crop,
+     no stretch), and the strip is sized so the next photo peeks in
+     at the edge as the scroll hint. */
+  .visit-gallery-wrap{margin-top:34px;min-width:0}
+  .visit-gallery{
+    display:flex;gap:14px;
+    height:clamp(280px,72vw,380px);
+    overflow-x:auto;overflow-y:hidden;
+    scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:thin;scrollbar-color:var(--page-line) transparent;
+    padding-bottom:10px;
+    border-radius:14px;
+  }
+  .visit-gallery::-webkit-scrollbar{height:6px}
+  .visit-gallery::-webkit-scrollbar-thumb{background:var(--page-line);border-radius:999px}
+  .visit-gallery::-webkit-scrollbar-track{background:transparent}
+  .visit-gallery figure{
+    margin:0;flex:0 0 auto;height:100%;
+    scroll-snap-align:start;scroll-snap-stop:always;
+  }
+  .visit-gallery figure img{
+    height:100%;width:auto;max-width:none;
+    border-radius:14px;
+  }
+  .visit-gallery-hint{
+    margin:4px 0 0;font-size:.78rem;font-weight:600;line-height:1.45;
+    color:var(--page-soft);letter-spacing:.02em;
+  }
+  footer{padding:0 28px 44px;max-width:860px;margin:0 auto}
+  footer p{border-top:1px solid var(--page-line);padding-top:18px;margin:0;font-size:.82rem;color:var(--page-soft);line-height:1.6}
+
+  /* ================= PHONE — PORTRAIT ONLY =================
+     Portrait phones get the stacked top-bar layout. Landscape phones
+     deliberately do NOT match this block, so rotating the phone reveals
+     the real laptop layout: fixed left rail + drinks on the right. */
+  @media (max-width:880px) and (orientation:portrait){
+    .rail{
+      position:sticky;top:0;width:auto;inset:auto;z-index:30;
+      padding:14px 16px 12px;overflow:visible;
+      box-shadow:0 1px 0 rgba(23,21,18,.08);
+      /* TRIAL (Frank, portrait phones only): the shop's studio
+         interior photo sits behind the header band — logo, status,
+         phone, Instagram. The wash over it is deliberately light
+         (45% → 55%, down from 84% → 90%) so the photo reads
+         clearly as a photo of the shop; legibility is carried on
+         the text side instead — a soft light halo behind the
+         header lines and a drop-shadow under the logo (see the
+         portrait rules below). The sideways layouts keep
+         the plain marble rail (see the body.wide restore below and
+         the untouched base rule). */
+      background:
+        linear-gradient(rgba(246,243,239,.45),rgba(246,243,239,.55)),
+        url("assets/interior-studio.jpg") center 32% / cover no-repeat #eae7e1;
+    }
+    /* Header legibility over the now-clearer photo: the logo gets
+       a soft light drop-shadow so its letterforms lift off the
+       wall behind it, and the status / contact lines get a light
+       halo plus a touch more weight. Portrait header only. */
+    .logo-stage{filter:drop-shadow(0 1px 5px rgba(252,250,246,.9)) drop-shadow(0 0 14px rgba(252,250,246,.55))}
+    .rail-open,.rail-contact{text-shadow:0 1px 6px rgba(252,250,246,.95),0 0 3px rgba(252,250,246,.9),0 0 12px rgba(252,250,246,.6)}
+    /* Phone header: one centred stack — the logo in the middle
+       (242px wide — another 20% larger, per Frank; everything
+       else in the header keeps its smaller size), the open/closed status as
+       a small centred line under it, then the contact block —
+       phone and Instagram only; the address and Directions live
+       in the Visit Us section. The hamburger leaves the flow and
+       pins to the top-right corner; what it opens is no longer
+       the contact info but the three section entries below. */
+    .rail-top{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+    .logo-wrap{width:242px;flex:0 0 auto}
+    .rail-tag{display:none}
+    .rail-open{margin:0;font-size:.78rem;font-weight:700;justify-content:center}
+    .rail-head-meta{flex:0 0 auto;min-width:0;display:flex;justify-content:center}
+    .rail-contact{display:block;margin-top:2px;font-size:.85rem;line-height:1.45}
+    .rail-contact .rc-line{margin:2px 0 0}
+    .rail-contact .rc-line:first-child{margin-top:0}
+    .rail-contact a{font-weight:700}
+    .rail-contact .ig-link{
+      display:inline-flex;align-items:center;gap:7px;text-decoration:none;
+      font-weight:700;min-height:36px;
+    }
+    .rail-contact .ig-link svg{flex:none;display:block;border-radius:6px;box-shadow:0 3px 10px rgba(214,41,118,.38),0 1px 3px rgba(150,47,191,.28)}
+    .menu-btn{
+      display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;
+      position:absolute;top:12px;right:14px;
+      width:48px;height:48px;border-radius:50%;cursor:pointer;
+      border:1px solid rgba(23,21,18,.5);background:rgba(255,255,255,.55);
+      font-size:1.15rem;color:inherit;padding:0;
+    }
+    .rail-collapsible{display:none}
+    .rail.open .rail-collapsible{display:block;max-height:62svh;overflow-y:auto}
+    /* the hamburger panel is the section nav only: the contact
+       box now lives in the visible header above, and the
+       signature list gives way to the same three entries the
+       sideways rail uses — tapping one jumps to that section
+       (and the script closes the panel, as before) */
+    .rail-collapsible .rail-visit,.rail-collapsible .rail-nav{display:none}
+    .phone-nav{display:flex;flex-direction:column;gap:4px;margin-top:14px}
+    .phone-nav a{
+      display:flex;align-items:center;gap:9px;text-decoration:none;
+      border:1px solid transparent;border-radius:11px;
+      font-size:.95rem;font-weight:700;padding:8px 11px;min-height:44px;
+    }
+    .phone-nav a .n{font-family:"Cormorant Garamond",serif;font-size:1rem;font-weight:600;color:var(--rail-soft)}
+    .phone-nav a:active{background:rgba(255,255,255,.55);border-color:var(--rail-line)}
+    .rail-nav{margin-top:18px}
+    .rail-visit{margin-top:16px}
+    main{margin-left:0}
+    /* Tight under the header, per Frank: the Signature Items
+       heading sits close under the sticky rail (just clear of
+       the sideways toggle), then the reserved --band gap with
+       the fixed splash centred in it, then the photo — the
+       first drink's photo is on screen without scrolling. */
+    .drink{min-height:94svh;padding:40px 18px 32px;--band:136px}
+    /* Signature Items heading: the Full Menu heading's font and
+       weight (Cormorant Garamond 600) at 20% under its size —
+       clamp(1.6rem,2.9vw,2.25rem), 80% of the menu heading's
+       clamp — so it sits visibly subordinate to the 242px logo,
+       per Frank. The .drink prefix gives this rule enough
+       specificity to beat .drink h2's size, which otherwise
+       wins; margin and line-height are deliberately left to
+       .drink h2, exactly as they fall today. The lettering is
+       RAISED like the Full Menu words: the same two-part
+       text-shadow as #menu h2 — a fine light catch along the
+       top edge of each letter, a soft dark shadow below — so
+       it stands proud of the drink's field colour. */
+    .drink .seq-title{
+      display:block;
+      font-family:"Cormorant Garamond",serif;font-weight:600;
+      font-size:clamp(1.6rem,2.9vw,2.25rem);
+      text-shadow:0 -1px 1px rgba(255,255,255,.85),0 2px 3px rgba(4,5,7,.5),0 1px 1px rgba(4,5,7,.35);
+    }
+    /* the first drink's small kicker gives way to the
+       Signature Items heading above it */
+    #chrome-latte .kicker{display:none}
+    .drink .photo.frameless img,.drink .photo.frameless video{width:min(420px,90vw)}
+    .section{padding:52px 20px}
+    .menu-inner{padding:0 20px}
+    /* the sticky menu bar pins to the VERY TOP of the screen
+       (top:0, no header offset) while the menu scrolls under it;
+       jumped-to groups land just clear of the bar itself
+       (bar is ~54px tall, so 62px leaves a small gap) */
+    .menu-subnav{top:0}
+    .menu-group{scroll-margin-top:62px}
+    /* narrow screens: slide the plate pattern left and stretch
+       it wider, so its deep edge falls off-canvas, the ramps run
+       even longer, and the black lettering lands on mid silver,
+       staying readable */
+    #menu::before{left:-24%;width:136%}
+    .visit-grid{grid-template-columns:1fr}
+    footer{padding:0 20px 36px}
+    /* the toggle straddles the bottom of the slimmer centred
+       header block (status / phone / Instagram only) */
+    .wide-toggle{display:inline-flex;top:196px}
+    /* splash stays pinned, horizontally centred, in the band
+       between the Signature Items heading above and the photo
+       below — right above the drink, in the middle. The band
+       (--band:136px above) is sized to the splash itself
+       (~88px tall at this width) with clear space on both
+       sides, and this offset centres the splash in it: with
+       the heading at its reduced size under the taller
+       (242px logo) header, its bottom edge sits at ~302px
+       and the photo's top at ~438px, so the splash
+       (326px–414px) touches neither — its droplet and spike
+       clear the heading's letters, and its drip tip clears
+       the photo. */
+    .splash-fixed{width:94.4px;top:326px;left:50%}
+  }
+
+  /* ============ PHONE LANDSCAPE = LAPTOP LAYOUT, COMPACT ============
+     Rotating a phone sideways shows the same design as a laptop —
+     left rail beside the drinks — just tightened so one drink fits
+     the short landscape height and the rail still scrolls. */
+  @media (orientation:landscape) and (max-height:560px){
+    .rail{width:184px;padding:14px 14px 12px}
+    .logo-wrap{width:100%}
+    .rail-tag{margin-top:8px;font-size:.6rem}
+    .rail-open{font-size:.76rem;margin-top:4px}
+    /* slim sideways rail: the full signature list + address box give
+       way to the simple three-entry nav */
+    .rail-collapsible{display:none}
+    .side-nav{display:flex;margin-top:12px}
+    .side-nav button{min-height:40px;padding:6px 9px;font-size:.85rem;gap:7px}
+    .side-nav a.side-ig{min-height:40px;padding:6px 9px;font-size:.85rem;gap:7px}
+    main{margin-left:184px}
+    .drink{min-height:100svh;padding:10px 22px 12px;--band:122px}
+    .drink .photo.frameless img,.drink .photo.frameless video{width:auto;height:32svh;max-width:54vw;aspect-ratio:1/1}
+    .drink .photo.card img{width:auto;height:32svh;max-width:54vw}
+    .drink .photo.card.wide img{height:32svh}
+    .drink h2{font-size:clamp(1.7rem,4.5vw,2.2rem);margin-top:10px}
+    .drink .desc{margin-top:4px;font-size:.9rem;line-height:1.4}
+    .drink .price{margin-top:4px;font-size:1.3rem}
+    .drink .count{margin-top:8px}
+    .drink .plaque-mark{font-size:3.2rem}
+    .drink .rule{margin-top:12px}
+    .scroll-hint{display:none}
+    .section{padding:36px 24px}
+    .menu-inner{padding:0 24px}
+    .visit-gallery{height:260px}
+    .wide-toggle{display:none}
+    /* splash centred over the drinks column, in the band between
+       the heading and the photo */
+    .splash-fixed{width:111.3px;top:31px;left:calc(184px + (100vw - 184px)/2)}
+  }
+  /* Wider landscape screens (tablets / small laptops): keep the full
+     rail, only the short-height drink tightening above is skipped. */
+  @media (orientation:landscape) and (max-height:560px) and (min-width:1100px){
+    .rail{width:324px;padding:22px 24px 16px}
+    .logo-wrap{width:88%}
+    main{margin-left:324px}
+    .splash-fixed{left:calc(324px + (100vw - 324px)/2)}
+    /* wide enough not to be cramped: full rail content returns */
+    .rail-collapsible{display:block}
+    .side-nav{display:none}
+  }
+
+  /* ============ TAP-FORCED SIDEWAYS VIEW (body.wide) ============
+     The laptop layout squeezed into a portrait phone screen, turned
+     on by the "Sideways view" button — no physical rotation needed.
+     The rail goes back to a fixed left column at a phone-friendly
+     width and the drinks sit beside it, exactly the arrangement
+     rotating was supposed to reveal. These rules use body.wide
+     specificity so they beat the portrait top-bar block above. */
+  body.wide .rail{
+    position:fixed;inset:0 auto 0 0;width:118px;z-index:30;
+    padding:12px 10px 10px;overflow-y:auto;overflow-x:hidden;
+    box-shadow:none;
+    /* the portrait header's interior-photo trial (above) must not
+       leak into the sideways rail: it keeps the plain marble */
+    background:#eae7e1 url("assets/rail-marble.jpg") center top / cover no-repeat;
+  }
+  body.wide .rail-top{display:block}
+  body.wide .logo-wrap{width:100%}
+  body.wide .rail-tag{display:block;margin-top:8px;font-size:.52rem;letter-spacing:.14em}
+  body.wide .rail-open{margin:5px 2px 0;font-size:.68rem}
+  body.wide .menu-btn{display:none}
+  /* the phone header's contact block belongs to the portrait
+     top-bar only — the sideways rail keeps its own visit box */
+  body.wide .rail-contact{display:none}
+  /* keep the portrait header's centring out of the slim rail:
+     tag and status stack left-aligned, as in the laptop layout */
+  body.wide .rail-head-meta{display:block}
+  body.wide .rail-open{justify-content:flex-start}
+  /* slim rail: full signature list + address box give way to the
+     simple three-entry nav, so the drinks get most of the screen */
+  body.wide .rail-collapsible{display:none}
+  body.wide .side-nav{display:flex;margin-top:12px;gap:3px}
+  body.wide .side-nav button{min-height:42px;padding:6px 7px;font-size:.72rem;gap:6px;border-radius:9px;line-height:1.25}
+  body.wide .side-nav a.side-ig{min-height:42px;padding:6px 7px;font-size:.72rem;gap:6px;border-radius:9px;line-height:1.25}
+  body.wide .side-nav a.side-ig svg{width:20px;height:20px}
+  body.wide .side-sub{margin-left:10px}
+  body.wide .side-sub button{min-height:36px;padding:5px 8px;font-size:.68rem}
+  /* the portrait-only Signature Items heading stays out of the
+     sideways layout; the first drink keeps its kicker there */
+  body.wide .seq-title{display:none}
+  body.wide #chrome-latte .kicker{display:block}
+  body.wide .rail-visit{margin-top:12px}
+  body.wide .rail-visit .box{font-size:.72rem;line-height:1.4}
+  body.wide .rail-visit b{font-size:.82rem}
+  body.wide .rail-actions{gap:10px}
+  body.wide .rail-actions a{font-size:.76rem}
+  body.wide .rail-nav{margin-top:12px}
+  body.wide .rail-label{margin:10px 2px 5px;font-size:.56rem;letter-spacing:.18em}
+  body.wide .sig-link{min-height:32px;padding:4px 7px;font-size:.76rem;gap:7px;border-radius:9px}
+  body.wide .swatch{width:13px;height:13px}
+  body.wide .sig-link .p{font-size:.92rem}
+  body.wide .rail-links{margin-top:10px;padding-top:6px}
+  body.wide .rail-links a{min-height:32px;padding:4px 7px;font-size:.8rem}
+  body.wide main{margin-left:118px}
+  body.wide .drink{min-height:100svh;padding:62px 12px 64px;--band:90px}
+  body.wide .drink .photo.frameless img,body.wide .drink .photo.frameless video{width:min(218px,100%)}
+  body.wide .drink .photo.card img{width:min(218px,100%)}
+  body.wide .drink .photo.card.wide img{width:min(226px,100%)}
+  body.wide .drink h2{font-size:1.6rem;margin-top:12px}
+  body.wide .drink .desc{margin-top:6px;font-size:.85rem;line-height:1.45}
+  body.wide .drink .price{margin-top:6px;font-size:1.25rem}
+  body.wide .drink .count{margin-top:10px}
+  body.wide .drink .plaque-mark{font-size:2.6rem}
+  body.wide .drink .rule{margin-top:12px}
+  body.wide .scroll-hint{display:none}
+  body.wide .section{padding:36px 16px}
+  body.wide .menu-inner{padding:0 16px}
+  /* sideways mode keeps its toggle pinned at the top centre of
+     the content column (top:12px, 44px tall) — the sticky menu
+     bar parks below it, and jumped-to groups land clear of both */
+  body.wide .menu-subnav{top:64px}
+  body.wide .menu-group{scroll-margin-top:126px}
+  body.wide .visit-gallery{height:240px}
+  body.wide .visit-grid{grid-template-columns:1fr}
+  body.wide footer{padding:0 16px 84px}
+  /* keep the toggle reachable at the top, centred over the drink column */
+  body.wide .wide-toggle{left:calc(50% + 59px);top:12px}
+  /* splash shrinks and sits centred over the drink column, below
+     the toggle and the heading, in the band above the photo */
+  body.wide .splash-fixed{width:75px;top:84px;left:calc(118px + (100vw - 118px)/2)}
+</style>
+</head>
+<body>
+
+<button class="wide-toggle" id="wideToggle" type="button" aria-pressed="false">⇄ Sideways view — the laptop layout</button>
+
+<img class="splash-fixed" src="assets/chrome-splash.png" alt="" aria-hidden="true" width="922" height="857" />
+
+<!-- ============ LEFT RAIL ============ -->
+<aside class="rail" id="rail">
+  <div class="rail-top">
+    <div class="logo-wrap">
+      <div class="logo-stage" role="img" aria-label="Chrome Coffee Studio — chrome fills from white into rendered metal chrome">
+        <img class="logo-studio-l" src="assets/logo-studio.png" alt="" width="1000" height="142" />
+        <img class="logo-outline-l" src="assets/logo-chrome-outline.png" alt="" width="1000" height="254" />
+        <img class="logo-white-l" src="assets/logo-chrome-white.png" alt="" width="1000" height="254" />
+        <div class="logo-chrome-clip">
+          <img src="assets/logo-chrome.png" alt="" width="1000" height="254" />
+          <span class="logo-sheen" aria-hidden="true"></span>
+        </div>
+      </div>
+    </div>
+    <div class="rail-head-meta">
+      <p class="rail-tag">Torrance · South Bay</p>
+      <p class="rail-open"><span class="dot" id="openDot"></span><span id="openText">Open daily 7am – 6pm</span></p>
+    </div>
+    <div class="rail-contact">
+      <p class="rc-line"><a href="tel:+14243605662">(424) 360-5662</a></p>
+      <p class="rc-line">
+        <a class="ig-link" href="https://www.instagram.com/chrome.coffee.studio/" target="_blank" rel="noopener" aria-label="Follow Chrome Coffee Studio on Instagram — @chrome.coffee.studio">
+          <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><defs><linearGradient id="igGradientHead" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#FEDA75"/><stop offset="30%" stop-color="#FA7E1E"/><stop offset="55%" stop-color="#D62976"/><stop offset="80%" stop-color="#962FBF"/><stop offset="100%" stop-color="#4F5BD5"/></linearGradient></defs><rect x="0" y="0" width="24" height="24" rx="6.5" ry="6.5" fill="url(#igGradientHead)"/><rect x="5.4" y="5.4" width="13.2" height="13.2" rx="3.8" ry="3.8" fill="none" stroke="#fff" stroke-width="1.9"/><circle cx="12" cy="12" r="3.1" fill="none" stroke="#fff" stroke-width="1.9"/><circle cx="17.15" cy="6.85" r="1.25" fill="#fff"/></svg>
+          <span>Follow us on Instagram</span>
+        </a>
+      </p>
+    </div>
+    <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="railNav" aria-label="Open menu">☰</button>
+  </div>
+
+  <nav class="side-nav" id="sideNav" aria-label="Sideways view">
+    <button type="button" data-view="signatures" class="active" aria-pressed="true">Signature Items</button>
+    <div class="side-sub-wrap" id="sideMenuWrap">
+      <button type="button" data-view="menu" id="sideMenuBtn" aria-pressed="false" aria-expanded="false" aria-controls="sideMenuSub">Full Menu<span class="caret" aria-hidden="true"></span></button>
+      <div class="side-sub" id="sideMenuSub" role="group" aria-label="Full Menu categories">
+        <button type="button" data-menu-group="menu-drinks">Drinks</button>
+        <button type="button" data-menu-group="menu-pastries">Pastries</button>
+        <button type="button" data-menu-group="menu-merch">Merchandise</button>
+      </div>
+    </div>
+    <button type="button" data-view="visit" aria-pressed="false">Visit Us</button>
+    <a class="side-ig" href="https://www.instagram.com/chrome.coffee.studio/" target="_blank" rel="noopener" aria-label="Chrome Coffee Studio on Instagram — @chrome.coffee.studio"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><defs><linearGradient id="igGradientSide" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#FEDA75"/><stop offset="30%" stop-color="#FA7E1E"/><stop offset="55%" stop-color="#D62976"/><stop offset="80%" stop-color="#962FBF"/><stop offset="100%" stop-color="#4F5BD5"/></linearGradient></defs><rect x="0" y="0" width="24" height="24" rx="6.5" ry="6.5" fill="url(#igGradientSide)"/><rect x="5.4" y="5.4" width="13.2" height="13.2" rx="3.8" ry="3.8" fill="none" stroke="#fff" stroke-width="1.9"/><circle cx="12" cy="12" r="3.1" fill="none" stroke="#fff" stroke-width="1.9"/><circle cx="17.15" cy="6.85" r="1.25" fill="#fff"/></svg><span>Instagram</span></a>
+  </nav>
+
+  <div class="rail-collapsible" id="railNav">
+    <nav class="phone-nav" aria-label="Sections">
+      <a href="#sequence"><span class="n">1</span>Signature Items</a>
+      <a href="#menu"><span class="n">2</span>Full Menu</a>
+      <a href="#visit"><span class="n">3</span>Visit Us</a>
+    </nav>
+    <div class="rail-visit">
+      <div class="box">
+        <b>Chrome Coffee Studio</b><br />
+        2734 Sepulveda Blvd<br />
+        Torrance, CA 90505<br />
+        Open daily · 7:00am – 6:00pm<br />
+        <a href="tel:+14243605662">(424) 360-5662</a>
+        <div class="rail-actions">
+          <a class="solid" href="https://www.google.com/maps/search/?api=1&amp;query=Chrome+Coffee+Studio+2734+Sepulveda+Blvd+Torrance+CA+90505" target="_blank" rel="noopener">Directions</a>
+        </div>
+      </div>
+    </div>
+    <nav class="rail-nav" aria-label="Signature drinks">
+      <p class="rail-label">Signatures — on the plaque</p>
+      <ul class="sig-list">
+        <li><a class="sig-link" href="#chrome-latte" data-target="chrome-latte"><span class="swatch" style="background:#c2a287"></span>Chrome Latte<span class="p">$6.50</span></a></li>
+        <li><a class="sig-link" href="#cream-top" data-target="cream-top"><span class="swatch" style="background:#e7d7c3"></span>Cream Top<span class="p">$5.50</span></a></li>
+        <li><a class="sig-link" href="#coldbrew-latte" data-target="coldbrew-latte"><span class="swatch" style="background:#5d3320"></span>Coldbrew Latte<span class="p">$6.00</span></a></li>
+        <li><a class="sig-link" href="#banana-cream-latte" data-target="banana-cream-latte"><span class="swatch" style="background:#e7d7c3"></span>Banana Cream Latte<span class="p">$7.00</span></a></li>
+        <li><a class="sig-link" href="#espresso-matcha" data-target="espresso-matcha"><span class="swatch" style="background:#4e2e20"></span>Espresso Matcha<span class="p">—</span></a></li>
+        <li><a class="sig-link" href="#coconut-mocha" data-target="coconut-mocha"><span class="swatch" style="background:#502d20"></span>Coconut Mocha<span class="p">—</span></a></li>
+        <li><a class="sig-link" href="#mocha-creamtop" data-target="mocha-creamtop"><span class="swatch" style="background:#a67a58"></span>Mocha Creamtop<span class="p">—</span></a></li>
+      </ul>
+      <ul class="rail-links">
+        <li><a href="#menu">Full menu <span>→</span></a></li>
+        <li><a href="#visit">Visit us <span>→</span></a></li>
+        <li><a class="ig-link" href="https://www.instagram.com/chrome.coffee.studio/" target="_blank" rel="noopener" aria-label="Chrome Coffee Studio on Instagram — @chrome.coffee.studio"><span class="ig-left"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><defs><linearGradient id="igGradientRail" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#FEDA75"/><stop offset="30%" stop-color="#FA7E1E"/><stop offset="55%" stop-color="#D62976"/><stop offset="80%" stop-color="#962FBF"/><stop offset="100%" stop-color="#4F5BD5"/></linearGradient></defs><rect x="0" y="0" width="24" height="24" rx="6.5" ry="6.5" fill="url(#igGradientRail)"/><rect x="5.4" y="5.4" width="13.2" height="13.2" rx="3.8" ry="3.8" fill="none" stroke="#fff" stroke-width="1.9"/><circle cx="12" cy="12" r="3.1" fill="none" stroke="#fff" stroke-width="1.9"/><circle cx="17.15" cy="6.85" r="1.25" fill="#fff"/></svg>Instagram</span><span aria-hidden="true">→</span></a></li>
+      </ul>
+    </nav>
+
+
+  </div>
+</aside>
+
+<main>
+  <!-- ============ SIGNATURE SEQUENCE ============ -->
+  <div class="sequence" id="sequence">
+    <section class="drink" id="chrome-latte" data-bg="#c2a287" data-dark="false">
+      <h2 class="seq-title rise d1">Signature Items</h2>
+      <p class="kicker rise d1">Signature · On the plaque</p>
+      <div class="photo frameless rise d2"><video src="assets/chrome-latte.mp4" poster="assets/chrome-latte.jpg" muted loop playsinline preload="none" width="1100" height="1100" aria-label="Chrome Latte — iced latte with an oat-milk cream top dusted with cinnamon"></video></div>
+      <h2 class="rise d3">Chrome Latte</h2>
+      <p class="desc rise d4">Oat-milk cream top, dusted with cinnamon.</p>
+      <div class="price rise d4">$6.50</div>
+      <p class="count rise d4">01 / 07</p>
+      <p class="scroll-hint" aria-hidden="true">Scroll ↓</p>
+    </section>
+
+    <section class="drink" id="cream-top" data-bg="#e7d7c3" data-dark="false">
+      <p class="kicker rise d1">Signature · On the plaque</p>
+      <div class="photo frameless rise d2"><video src="assets/cream-top.mp4" poster="assets/cream-top.jpg" muted loop playsinline preload="none" width="1100" height="1100" aria-label="Cream Top — house cream-top coffee at Chrome Coffee Studio"></video></div>
+      <h2 class="rise d3">Cream Top</h2>
+      <p class="desc rise d4">House cream-top coffee.</p>
+      <div class="price rise d4">$5.50</div>
+      <p class="count rise d4">02 / 07</p>
+    </section>
+
+    <section class="drink dark" id="coldbrew-latte" data-bg="#5d3320" data-dark="true">
+      <p class="kicker rise d1">Signature · On the plaque</p>
+      <div class="photo frameless rise d2"><video src="assets/coldbrew-latte.mp4" poster="assets/coldbrew-latte.jpg" muted loop playsinline preload="none" width="1100" height="1100" aria-label="Coldbrew Latte — dark cold brew cascading into milk"></video></div>
+      <h2 class="rise d3">Coldbrew Latte</h2>
+      <p class="desc rise d4">Cold brew cascading into milk.</p>
+      <div class="price rise d4">$6.00</div>
+      <p class="count rise d4">03 / 07</p>
+    </section>
+
+    <section class="drink" id="banana-cream-latte" data-bg="#e7d7c3" data-dark="false">
+      <p class="kicker rise d1">Signature · On the plaque</p>
+      <div class="photo frameless rise d2"><video src="assets/banana-cream-latte.mp4" poster="assets/banana-cream-latte.jpg" muted loop playsinline preload="none" width="1100" height="1100" aria-label="Banana Cream Latte — pale latte with thick banana cream flat at the rim"></video></div>
+      <h2 class="rise d3">Banana Cream Latte</h2>
+      <p class="desc rise d4">Thick banana cream, flat at the rim.</p>
+      <div class="price rise d4">$7.00</div>
+      <p class="count rise d4">04 / 07</p>
+    </section>
+
+    <section class="drink dark" id="espresso-matcha" data-bg="#4e2e20" data-dark="true">
+      <p class="kicker rise d1">Signature · On the plaque</p>
+      <div class="photo frameless rise d2"><video src="assets/espresso-matcha.mp4" poster="assets/espresso-matcha.jpg" muted loop playsinline preload="none" width="1100" height="1100" aria-label="Espresso Matcha — dark espresso layered over matcha and milk"></video></div>
+      <h2 class="rise d3">Espresso Matcha</h2>
+      <p class="desc rise d4">Listed on the shop&rsquo;s signature plaque.</p>
+      <div class="price rise d4">—</div>
+      <p class="count rise d4">05 / 07</p>
+    </section>
+
+    <section class="drink dark" id="coconut-mocha" data-bg="#502d20" data-dark="true">
+      <p class="kicker rise d1">Signature · On the plaque</p>
+      <div class="photo frameless rise d2"><video src="assets/coconut-mocha.mp4" poster="assets/coconut-mocha.jpg" muted loop playsinline preload="none" width="1100" height="1100" aria-label="Coconut Mocha — chocolate mocha marbled through coconut milk"></video></div>
+      <h2 class="rise d3">Coconut Mocha</h2>
+      <p class="desc rise d4">Chocolate mocha marbled through coconut milk.</p>
+      <div class="price rise d4">—</div>
+      <p class="count rise d4">06 / 07</p>
+    </section>
+
+    <section class="drink" id="mocha-creamtop" data-bg="#a67a58" data-dark="false">
+      <p class="kicker rise d1">Signature · On the plaque</p>
+      <div class="photo frameless rise d2"><video src="assets/mocha-creamtop.mp4" poster="assets/mocha-creamtop.jpg" muted loop playsinline preload="none" width="1100" height="1100" aria-label="Mocha Creamtop — mocha under a thick flat cream top dusted with cocoa"></video></div>
+      <h2 class="rise d3">Mocha Creamtop</h2>
+      <p class="desc rise d4">Mocha under a thick flat cream top, dusted with cocoa.</p>
+      <div class="price rise d4">—</div>
+      <p class="count rise d4">07 / 07</p>
+    </section>
+
+  </div>
+
+  <!-- ============ FULL MENU ============ -->
+  <section class="section" id="menu">
+    <div class="menu-inner">
+    <h2>The menu</h2>
+    <p class="sub">Every drink and pastry the shop lists — short on purpose, made at the marble counter.</p>
+
+    <nav class="menu-subnav" aria-label="Menu sections">
+      <a href="#menu-drinks" class="active">Drinks</a>
+      <a href="#menu-pastries">Pastries</a>
+      <a href="#menu-merch">Merchandise</a>
+    </nav>
+
+    <div class="menu-group" id="menu-drinks">
+      <h3>Drinks</h3>
+      <ul class="menu-list">
+        <li><img class="menu-thumb" src="assets/menu-thumbs/chrome-latte.jpg" alt="Chrome Latte" width="192" height="192" loading="lazy" /><div class="info"><b>Chrome Latte</b><small>Espresso, oat-milk cream top filling the top third</small></div><span class="price">$6.75</span></li>
+        <li><img class="menu-thumb" src="assets/menu-thumbs/cream-top.jpg" alt="Cream Top" width="192" height="192" loading="lazy" /><div class="info"><b>Cream Top</b><small>House cream-top coffee</small></div><span class="price">$5.75</span></li>
+        <li><img class="menu-thumb" src="assets/menu-thumbs/coldbrew-latte.jpg" alt="Coldbrew Latte" width="192" height="192" loading="lazy" /><div class="info"><b>Coldbrew Latte</b><small>Cold brew, milk</small></div><span class="price">$6.50</span></li>
+        <li><img class="menu-thumb" src="assets/menu-thumbs/banana-cream-latte.jpg" alt="Banana Cream Latte" width="192" height="192" loading="lazy" /><div class="info"><b>Banana Cream Latte</b><small>Espresso, banana cream</small></div><span class="price">$7.25</span></li>
+        <li><img class="menu-thumb" src="assets/menu-thumbs/espresso-matcha.jpg" alt="Espresso Matcha" width="192" height="192" loading="lazy" /><div class="info"><b>Espresso Matcha</b><small>On the shop&rsquo;s signature plaque</small></div><span class="price">—</span></li>
+        <li><img class="menu-thumb" src="assets/menu-thumbs/coconut-mocha.jpg" alt="Coconut Mocha" width="192" height="192" loading="lazy" /><div class="info"><b>Coconut Mocha</b><small>On the shop&rsquo;s signature plaque</small></div><span class="price">—</span></li>
+        <li><img class="menu-thumb" src="assets/menu-thumbs/mocha-creamtop.jpg" alt="Mocha Creamtop" width="192" height="192" loading="lazy" /><div class="info"><b>Mocha Creamtop</b><small>On the shop&rsquo;s signature plaque</small></div><span class="price">—</span></li>
+        <li><img class="menu-thumb" src="assets/menu-thumbs/chrome-matcha.jpg" alt="Chrome Matcha" width="192" height="192" loading="lazy" /><div class="info"><b>Chrome Matcha</b><small>Ceremonial matcha, signature cream top</small></div><span class="price">$7.25</span></li>
+        <li><img class="menu-thumb" src="assets/menu-thumbs/banana-cream-matcha.jpg" alt="Banana Cream Matcha" width="192" height="192" loading="lazy" /><div class="info"><b>Banana Cream Matcha</b><small>Matcha, banana cream</small></div><span class="price">$7.25</span></li>
+        <li><img class="menu-thumb" src="assets/menu-thumbs/yuzu-strawberry-matcha.jpg" alt="Yuzu Strawberry Matcha" width="192" height="192" loading="lazy" /><div class="info"><b>Yuzu Strawberry Matcha</b><small>Matcha, yuzu, strawberry</small></div><span class="price">$7.25</span></li>
+        <li><img class="menu-thumb" src="assets/menu-thumbs/hojicha-cream-top.jpg" alt="Hojicha Cream Top" width="192" height="192" loading="lazy" /><div class="info"><b>Hojicha Cream Top</b><small>Roasted hojicha, cream top</small></div><span class="price">$7.00</span></li>
+        <li><img class="menu-thumb" src="assets/menu-thumbs/biscoff-latte.jpg" alt="Biscoff Latte" width="192" height="192" loading="lazy" /><div class="info"><b>Biscoff Latte</b><small>The &ldquo;secret&rdquo; one — ask at the counter</small></div><span class="price">$8.00</span></li>
+      </ul>
+    </div>
+
+    <div class="menu-group" id="menu-pastries">
+      <h3>Pastries</h3>
+      <ul class="menu-list">
+        <li><img class="menu-thumb" src="assets/menu-thumbs/croissant.jpg" alt="Croissant" width="192" height="192" loading="lazy" /><div class="info"><b>Croissant</b><small>Baked fresh daily</small></div><span class="price">$5.50</span></li>
+        <li><img class="menu-thumb" src="assets/menu-thumbs/almond-croissant.jpg" alt="Almond Croissant" width="192" height="192" loading="lazy" /><div class="info"><b>Almond Croissant</b></div><span class="price sold-out">Sold out</span></li>
+        <li><img class="menu-thumb" src="assets/menu-thumbs/matcha-croissant.jpg" alt="Matcha Croissant" width="192" height="192" loading="lazy" /><div class="info"><b>Matcha Croissant</b></div><span class="price sold-out">Sold out</span></li>
+        <li><img class="menu-thumb" src="assets/menu-thumbs/banana-nut-muffin.jpg" alt="Banana Nut Muffin" width="192" height="192" loading="lazy" /><div class="info"><b>Banana Nut Muffin</b></div><span class="price sold-out">Sold out</span></li>
+        <li><img class="menu-thumb" src="assets/menu-thumbs/everything-croissant.jpg" alt="Everything Croissant" width="192" height="192" loading="lazy" /><div class="info"><b>Everything Croissant</b></div><span class="price sold-out">Sold out</span></li>
+        <li><img class="menu-thumb" src="assets/menu-thumbs/pain-au-chocolat.jpg" alt="Pain au Chocolat" width="192" height="192" loading="lazy" /><div class="info"><b>Pain au Chocolat</b><small>Baked fresh daily</small></div><span class="price sold-out">Sold out</span></li>
+        <li><img class="menu-thumb" src="assets/menu-thumbs/kouign-amann.jpg" alt="Kouign Amann" width="192" height="192" loading="lazy" /><div class="info"><b>Kouign Amann</b><small>Caramelised, flaky</small></div><span class="price">$5.50</span></li>
+        <li><div class="info"><b>Passion Fruit</b></div><span class="price">$6.50</span></li>
+        <li><img class="menu-thumb" src="assets/menu-thumbs/early-morning-bun.jpg" alt="Early Morning Bun" width="192" height="192" loading="lazy" /><div class="info"><b>Early Morning Bun</b></div><span class="price sold-out">Sold out</span></li>
+        <li><img class="menu-thumb" src="assets/menu-thumbs/choc-chip-cookie.jpg" alt="Choc Chip Cookie" width="192" height="192" loading="lazy" /><div class="info"><b>Choc Chip Cookie</b></div><span class="price sold-out">Sold out</span></li>
+        <li><img class="menu-thumb" src="assets/menu-thumbs/blueberry-oat-muffin.jpg" alt="Blueberry Oat Muffin" width="192" height="192" loading="lazy" /><div class="info"><b>Blueberry Oat Muffin</b></div><span class="price">$6.25</span></li>
+        <li><img class="menu-thumb" src="assets/menu-thumbs/ube-cruffin.jpg" alt="Ube Cruffin" width="192" height="192" loading="lazy" /><div class="info"><b>Ube Cruffin</b></div><span class="price sold-out">Sold out</span></li>
+      </ul>
+    </div>
+
+    <div class="menu-group" id="menu-merch">
+      <h3>Merchandise</h3>
+      <ul class="menu-list">
+        <li><img class="menu-thumb" src="assets/menu-thumbs/mug.jpg" alt="Mug" width="192" height="192" loading="lazy" /><div class="info"><b>Mug</b></div><span class="price">$15.00</span></li>
+        <li><div class="info"><b>Tumbler</b></div><span class="price">$45.00</span></li>
+        <li><div class="info"><b>Shirt</b></div><span class="price">$35.00</span></li>
+        <li><div class="info"><b>Hoodie</b></div><span class="price">$65.00</span></li>
+      </ul>
+    </div>
+    <p class="note">Prices from the shop&rsquo;s own Clover menu, November 2026. &ldquo;—&rdquo; means no price is listed there.</p>
+    </div>
+  </section>
+
+  <!-- ============ VISIT ============ -->
+  <section class="section" id="visit" style="padding-top:8px">
+    <h2>Visit</h2>
+    <p class="sub">A family-owned studio café, soft-opened 1 October 2025 — grey walls, a marble counter, wood benches, and one red espresso machine.</p>
+    <div class="visit-grid">
+      <img src="assets/interior.jpg" alt="Inside Chrome Coffee Studio — marble counter and chrome drip sculpture" width="1100" height="733" loading="lazy" />
+      <div>
+        <ul class="visit-facts">
+          <li><b>Address</b>2734 Sepulveda Blvd, Torrance, CA 90505</li>
+          <li><b>Hours</b><span id="visitOpen">Open daily · 7:00am – 6:00pm</span><br />Monday – Sunday, every day of the week.</li>
+          <li><b>Phone</b><a href="tel:+14243605662">(424) 360-5662</a></li>
+          <li><b>Instagram</b><a href="https://www.instagram.com/chrome.coffee.studio/" target="_blank" rel="noopener">@chrome.coffee.studio</a></li>
+        </ul>
+        <div class="visit-actions">
+          <a class="solid" href="https://www.google.com/maps/search/?api=1&amp;query=Chrome+Coffee+Studio+2734+Sepulveda+Blvd+Torrance+CA+90505" target="_blank" rel="noopener">Get directions</a>
+          <a href="tel:+14243605662">Call the shop</a>
+        </div>
+      </div>
+    </div>
+    <div class="visit-gallery-wrap">
+      <div class="visit-gallery" tabindex="0" role="region" aria-label="Photos of Chrome Coffee Studio — scroll sideways to see more">
+        <figure><img src="assets/visit-sign.jpg" alt="Chrome Coffee Studio's mirrored A-frame sign inside the shop, reflecting the red espresso machine" width="752" height="1000" loading="lazy" /></figure>
+        <figure><img src="assets/visit-interior.jpg" alt="Inside Chrome Coffee Studio — the marble counter and studio interior" width="1000" height="667" loading="lazy" /></figure>
+        <figure><img src="assets/visit-03.jpg" alt="An iced layered drink on a steel tray with chrome spheres by the espresso machine at Chrome Coffee Studio" width="750" height="1000" loading="lazy" decoding="async" /></figure>
+        <figure><img src="assets/visit-04.jpg" alt="Two Chrome Coffee Studio drinks on a wooden table with chrome sphere decorations" width="750" height="1000" loading="lazy" decoding="async" /></figure>
+        <figure><img src="assets/visit-05.jpg" alt="Close-up of a Chrome Coffee Studio cup with a swirled cream top" width="750" height="1000" loading="lazy" decoding="async" /></figure>
+        <figure><img src="assets/visit-06.jpg" alt="A Chrome Coffee Studio drink beside a small Christmas tree with chrome ornaments" width="750" height="1000" loading="lazy" decoding="async" /></figure>
+        <figure><img src="assets/visit-07.jpg" alt="An iced drink with a pink cream top on a steel tray at Chrome Coffee Studio" width="750" height="1000" loading="lazy" decoding="async" /></figure>
+        <figure><img src="assets/visit-08.jpg" alt="A tray with two pink drinks and a green pastry at Chrome Coffee Studio" width="750" height="1000" loading="lazy" decoding="async" /></figure>
+        <figure><img src="assets/visit-09.jpg" alt="A small cup of orange drink on a steel tray with chrome spheres at Chrome Coffee Studio" width="752" height="1000" loading="lazy" decoding="async" /></figure>
+        <figure><img src="assets/visit-10.jpg" alt="Pouring a canned drink over a glass of ice at Chrome Coffee Studio" width="752" height="1000" loading="lazy" decoding="async" /></figure>
+        <figure><img src="assets/visit-11.jpg" alt="Drinks, strawberries and cherries on a wooden table at Chrome Coffee Studio" width="750" height="1000" loading="lazy" decoding="async" /></figure>
+        <figure><img src="assets/visit-12.jpg" alt="A hand holding an iced drink in front of a chrome star decoration at Chrome Coffee Studio" width="752" height="1000" loading="lazy" decoding="async" /></figure>
+        <figure><img src="assets/visit-13.jpg" alt="An iced Chrome Coffee Studio drink surrounded by red ornaments" width="752" height="1000" loading="lazy" decoding="async" /></figure>
+        <figure><img src="assets/visit-14.jpg" alt="Two iced drinks on a tray at Chrome Coffee Studio" width="750" height="1000" loading="lazy" decoding="async" /></figure>
+        <figure><img src="assets/visit-15.jpg" alt="Two small drinks on a plate with red ornaments at Chrome Coffee Studio" width="750" height="1000" loading="lazy" decoding="async" /></figure>
+        <figure><img src="assets/visit-16.jpg" alt="A cup topped with crumbled Biscoff cookie at Chrome Coffee Studio" width="750" height="1000" loading="lazy" decoding="async" /></figure>
+        <figure><img src="assets/visit-17.jpg" alt="A tray of drinks with strawberries and a pastry at Chrome Coffee Studio" width="750" height="1000" loading="lazy" decoding="async" /></figure>
+        <figure><img src="assets/visit-18.jpg" alt="Three strawberry drinks with red ornaments at Chrome Coffee Studio" width="750" height="1000" loading="lazy" decoding="async" /></figure>
+        <figure><img src="assets/visit-19.jpg" alt="Two drinks — a matcha and a strawberry drink — held up at Chrome Coffee Studio" width="752" height="1000" loading="lazy" decoding="async" /></figure>
+        <figure><img src="assets/visit-20.jpg" alt="A pink strawberry drink surrounded by fresh strawberries at Chrome Coffee Studio" width="750" height="1000" loading="lazy" decoding="async" /></figure>
+        <figure><img src="assets/visit-21.jpg" alt="Coffee beans spilled on concrete beside a tipped Chrome Coffee Studio cup" width="750" height="1000" loading="lazy" decoding="async" /></figure>
+        <figure><img src="assets/visit-22.jpg" alt="A wooden tray with four drinks at Chrome Coffee Studio" width="750" height="1000" loading="lazy" decoding="async" /></figure>
+      </div>
+      <p class="visit-gallery-hint" aria-hidden="true">Swipe or scroll sideways to see more photos &rarr;</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>Chrome Coffee Studio · 2734 Sepulveda Blvd, Torrance, CA 90505 · Open daily 7am–6pm · (424) 360-5662<br />
+    Address, hours &amp; phone — Discover Torrance. Menu &amp; prices — BusinessesMap public listing, gathered 22 Nov 2026. Signature list — the shop&rsquo;s in-store plaque.</p>
+  </footer>
+</main>
+
+<script>
+/* Scroll-driven sequence: reveal each drink gently as it arrives,
+   ease the stage colour to that drink, and light up its rail entry. */
+var sequence=document.getElementById('sequence');
+var drinks=[].slice.call(document.querySelectorAll('.drink'));
+var railLinks={};
+document.querySelectorAll('.sig-link').forEach(function(a){railLinks[a.getAttribute('data-target')]=a;});
+
+var revealIO=new IntersectionObserver(function(entries){
+  entries.forEach(function(en){
+    if(en.isIntersecting){en.target.classList.add('inview');revealIO.unobserve(en.target);}
+  });
+},{threshold:.28});
+drinks.forEach(function(d){revealIO.observe(d);});
+
+/* Signature drink loops: each slide's photo is now a muted looping
+   video of that drink, with the photo itself as the poster, so the
+   slide looks identical until the loop starts. Only the CURRENT
+   slide's video plays — the observer below (the same one that
+   eases the stage colour and lights the rail entry) plays the
+   drink crossing the middle of the screen and pauses every other
+   loop, so seven videos never run at once. Reduced-motion
+   visitors keep the still posters. */
+var sigVideos=[].slice.call(document.querySelectorAll('.drink video'));
+var reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function pauseSigVideos(except){
+  sigVideos.forEach(function(v){if(v!==except&&!v.paused)v.pause();});
+}
+/* The current drink (the one crossing the middle of the screen),
+   remembered so the gesture retry below knows which loop to start. */
+var currentDrink=null;
+function tryPlaySigVideo(v){
+  if(!v||reduceMotion)return;
+  /* set muted from script as well as the attribute: some WebKit
+     builds only honour the property when deciding whether muted
+     autoplay is allowed */
+  v.muted=true;
+  if(v.preload!=='auto')v.preload='auto';
+  if(!v.paused)return;
+  var p=v.play();
+  if(p&&p.catch)p.catch(function(){});
+}
+function playSigVideo(drink){
+  if(reduceMotion)return;
+  currentDrink=drink;
+  var v=drink.querySelector('video');
+  pauseSigVideos(v);
+  tryPlaySigVideo(v);
+}
+/* Why the loops sat still on the phone preview: the loops are tiny
+   (~150 KB each) and the files themselves are fine — the block was
+   playback permission. Desktop browsers allow a muted, inline
+   video to start from script, but the in-app phone browser
+   (WebKit/WKWebView) refuses a script-started play() until the
+   visitor has touched the page: the promise rejects, the old code
+   swallowed the rejection, and nothing ever retried, so every
+   slide stayed on its poster photo. The fix is to retry the
+   current drink's loop on the visitor's own interactions — a tap
+   or the touch that begins a scroll is exactly the gesture WebKit
+   asks for, so the first touch anywhere starts the loop, and the
+   throttled scroll retry starts each later drink's loop as it
+   arrives while the visitor is still scrolling. */
+function unlockSigVideo(){
+  if(currentDrink)tryPlaySigVideo(currentDrink.querySelector('video'));
+}
+['pointerdown','touchstart','touchend','click','keydown'].forEach(function(ev){
+  window.addEventListener(ev,unlockSigVideo,{passive:true});
+});
+var sigScrollRetryAt=0;
+window.addEventListener('scroll',function(){
+  if(!currentDrink)return;
+  var v=currentDrink.querySelector('video');
+  if(!v||!v.paused)return;
+  var now=Date.now();
+  if(now-sigScrollRetryAt<500)return;
+  sigScrollRetryAt=now;
+  tryPlaySigVideo(v);
+},{passive:true});
+
+var currentIO=new IntersectionObserver(function(entries){
+  entries.forEach(function(en){
+    if(!en.isIntersecting)return;
+    var d=en.target;
+    sequence.style.setProperty('--seq-bg',d.getAttribute('data-bg'));
+    Object.keys(railLinks).forEach(function(k){railLinks[k].classList.toggle('active',k===d.id);});
+    playSigVideo(d);
+  });
+},{rootMargin:'-48% 0px -48% 0px'});
+drinks.forEach(function(d){currentIO.observe(d);});
+
+/* When the whole signature sequence is off screen (menu / visit
+   reached, or a sideways view switch hides it), no loop runs. */
+if('IntersectionObserver' in window){
+  new IntersectionObserver(function(entries){
+    entries.forEach(function(en){if(!en.isIntersecting)pauseSigVideos(null);});
+  },{threshold:0}).observe(sequence);
+}
+
+/* Splash: pinned over the drinks while the signature sequence is
+   on screen; fade it away once the sequence has scrolled off, so
+   it never sits over the menu or visit text. */
+var splash=document.querySelector('.splash-fixed');
+if(splash&&'IntersectionObserver' in window){
+  new IntersectionObserver(function(entries){
+    entries.forEach(function(en){splash.classList.toggle('gone',!en.isIntersecting);});
+  },{threshold:0}).observe(sequence);
+}
+
+/* Full Menu plate: the light is ONE surface — the wide, soft band
+   pattern painted on #menu::before. As the menu travels through
+   the viewport, the script drifts that whole pattern a few pixels
+   sideways, so the reference's own bright band slides gently
+   across the polished metal as you scroll: the sheen IS the
+   surface's light moving, never a separate streak layered over
+   static highlights. The drift runs through the --drift custom
+   property (transform on the pseudo-element), is rAF-throttled,
+   and is tied to the section's own scroll progress; it parks
+   when the section is out of view. Reduced-motion visitors get
+   the plate with its light at rest. */
+var menuSec=document.getElementById('menu');
+if(menuSec&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+  var driftTicking=false;
+  function updateDrift(){
+    driftTicking=false;
+    var r=menuSec.getBoundingClientRect();
+    var vh=window.innerHeight||document.documentElement.clientHeight;
+    if(r.bottom<0||r.top>vh)return;
+    var p=(vh-r.top)/(vh+r.height);
+    if(p<0)p=0;if(p>1)p=1;
+    var amp=r.width*0.025;
+    var x=-amp+p*2*amp;
+    menuSec.style.setProperty('--drift',x.toFixed(1)+'px');
+  }
+  function queueDrift(){
+    if(!driftTicking){driftTicking=true;requestAnimationFrame(updateDrift);}
+  }
+  window.addEventListener('scroll',queueDrift,{passive:true});
+  window.addEventListener('resize',queueDrift);
+  updateDrift();
+}
+
+/* mobile rail toggle */
+var rail=document.getElementById('rail'),menuBtn=document.getElementById('menuBtn');
+function closeRail(){
+  rail.classList.remove('open');
+  menuBtn.setAttribute('aria-expanded','false');
+  menuBtn.textContent='☰';
+}
+menuBtn.addEventListener('click',function(){
+  var open=rail.classList.toggle('open');
+  menuBtn.setAttribute('aria-expanded',open?'true':'false');
+  menuBtn.textContent=open?'✕':'☰';
+});
+function isPortraitPhone(){
+  return window.matchMedia('(max-width: 880px) and (orientation: portrait)').matches;
+}
+rail.querySelectorAll('a').forEach(function(a){
+  a.addEventListener('click',function(){if(isPortraitPhone())closeRail();});
+});
+/* Rotating to landscape must always reveal the full rail — clear any
+   portrait hamburger state so the laptop layout shows immediately. */
+function syncRailToOrientation(){if(!isPortraitPhone())closeRail();}
+window.addEventListener('orientationchange',function(){setTimeout(syncRailToOrientation,60);});
+window.addEventListener('resize',syncRailToOrientation);
+
+/* Tap-forced sideways view: some in-app webviews never rotate, so the
+   laptop layout must be reachable by tap alone. The button toggles
+   body.wide, which restyles the page into rail-left / drinks-right
+   inside the portrait screen. If the phone really does rotate into a
+   landscape viewport, the genuine landscape CSS takes over and the
+   forced mode clears itself. */
+var wideToggle=document.getElementById('wideToggle');
+function setWide(on){
+  document.body.classList.toggle('wide',on);
+  wideToggle.setAttribute('aria-pressed',on?'true':'false');
+  wideToggle.textContent=on?'✕ Back to phone view':'⇄ Sideways view — the laptop layout';
+  if(on)closeRail();
+}
+wideToggle.addEventListener('click',function(){
+  setWide(!document.body.classList.contains('wide'));
+});
+function clearWideOnRealLandscape(){
+  if(document.body.classList.contains('wide')&&window.innerWidth>window.innerHeight){
+    setWide(false);
+  }
+}
+window.addEventListener('orientationchange',function(){setTimeout(clearWideOnRealLandscape,60);});
+window.addEventListener('resize',clearWideOnRealLandscape);
+
+/* Logo: the white-to-chrome sequence is pure CSS on the flat
+   logo's layers (see .logo-stage) — it plays once on load, then
+   holds on the finished chrome; reduced-motion visitors get the
+   finished logo with no animation. */
+
+/* Sideways three-entry nav: active only in the sideways layouts
+   (tap-forced wide mode, or a real short landscape phone screen).
+   Picking an entry shows only that part on the right — Signature
+   Items = the signature sequence, Full Menu = the menu section,
+   Visit Us = the visit section as it already is. Leaving sideways
+   restores the full scrolling page automatically. */
+var sideNavBtns=[].slice.call(document.querySelectorAll('#sideNav button[data-view]'));
+var sideMenuWrap=document.getElementById('sideMenuWrap');
+var sideMenuBtn=document.getElementById('sideMenuBtn');
+var sideSubBtns=[].slice.call(document.querySelectorAll('#sideNav button[data-menu-group]'));
+function setView(name,noScroll){
+  document.body.classList.remove('view-signatures','view-menu','view-visit');
+  document.body.classList.add('view-'+name);
+  sideNavBtns.forEach(function(b){
+    var on=b.getAttribute('data-view')===name;
+    b.classList.toggle('active',on);
+    b.setAttribute('aria-pressed',on?'true':'false');
+  });
+  /* Full Menu's categories ride along with the menu view:
+     entering it expands them, leaving it collapses them. */
+  var menuOpen=name==='menu';
+  if(sideMenuWrap)sideMenuWrap.classList.toggle('open',menuOpen);
+  if(sideMenuBtn)sideMenuBtn.setAttribute('aria-expanded',menuOpen?'true':'false');
+  if(!menuOpen)sideSubBtns.forEach(function(b){b.classList.remove('active');});
+  if(!noScroll)window.scrollTo(0,0);
+}
+sideNavBtns.forEach(function(b){
+  b.addEventListener('click',function(){
+    var v=b.getAttribute('data-view');
+    /* Already in the menu view: Full Menu acts as the expander
+       toggle for its categories instead of re-entering the view. */
+    if(v==='menu'&&document.body.classList.contains('view-menu')&&sideMenuWrap){
+      var open=sideMenuWrap.classList.toggle('open');
+      if(sideMenuBtn)sideMenuBtn.setAttribute('aria-expanded',open?'true':'false');
+      return;
+    }
+    setView(v);
+  });
+});
+/* Category sub-entries: switch to the Full Menu view (which
+   expands the list), then land on the chosen group — Drinks,
+   Pastries or Merchandise — clear of the sticky menu bar via
+   the group's scroll-margin. */
+sideSubBtns.forEach(function(b){
+  b.addEventListener('click',function(){
+    setView('menu',true);
+    sideSubBtns.forEach(function(x){x.classList.toggle('active',x===b);});
+    var g=document.getElementById(b.getAttribute('data-menu-group'));
+    if(g)requestAnimationFrame(function(){g.scrollIntoView({block:'start'});});
+  });
+});
+var landscapeMq=window.matchMedia('(orientation: landscape) and (max-height: 560px) and (max-width: 1099px)');
+function syncSideways(){
+  var on=document.body.classList.contains('wide')||landscapeMq.matches;
+  document.body.classList.toggle('is-sideways',on);
+}
+document.body.classList.add('view-signatures');
+syncSideways();
+window.addEventListener('resize',syncSideways);
+window.addEventListener('orientationchange',function(){setTimeout(syncSideways,60);});
+var wideToggleBtn=document.getElementById('wideToggle');
+if(wideToggleBtn)wideToggleBtn.addEventListener('click',function(){setTimeout(syncSideways,0);});
+
+/* Full Menu sub-nav: on portrait phones the sticky bar now pins
+   to the very top of the screen (top:0 in the portrait CSS block),
+   so no measured header offset is needed anywhere — this just
+   clears any --subnav-top an earlier build may have set inline.
+   The bar's stick offsets live entirely in CSS per layout. */
+function syncSubnavTop(){
+  if(!menuSec)return;
+  menuSec.style.removeProperty('--subnav-top');
+}
+window.addEventListener('resize',syncSubnavTop);
+window.addEventListener('load',syncSubnavTop);
+window.addEventListener('orientationchange',function(){setTimeout(syncSubnavTop,80);});
+if(wideToggle)wideToggle.addEventListener('click',function(){setTimeout(syncSubnavTop,0);});
+syncSubnavTop();
+
+/* Sub-nav active state: light up the entry for whichever menu
+   group is currently crossing the middle of the viewport. */
+var subnavLinks=[].slice.call(document.querySelectorAll('.menu-subnav a'));
+if(subnavLinks.length&&'IntersectionObserver' in window){
+  var groupIO=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(!en.isIntersecting)return;
+      subnavLinks.forEach(function(a){
+        a.classList.toggle('active',a.getAttribute('href')==='#'+en.target.id);
+      });
+    });
+  },{rootMargin:'-30% 0px -60% 0px'});
+  ['menu-drinks','menu-pastries','menu-merch'].forEach(function(id){
+    var g=document.getElementById(id);
+    if(g)groupIO.observe(g);
+  });
+}
+
+/* open-now, Torrance time (7am–6pm daily) */
+function openNow(){
+  try{
+    var h=+new Intl.DateTimeFormat('en-US',{timeZone:'America/Los_Angeles',hour:'numeric',hour12:false}).format(new Date());
+    var open=h>=7&&h<18;
+    var dot=document.getElementById('openDot');
+    dot.className='dot '+(open?'open':'closed');
+    document.getElementById('openText').textContent=open?'Open now · Closes 6pm':'Closed · Opens 7am';
+    document.getElementById('visitOpen').textContent=(open?'Open now · ':'Closed now · ')+'Open daily · 7:00am – 6:00pm';
+  }catch(e){}
+}
+openNow();
+</script>
+</body>
+</html>
