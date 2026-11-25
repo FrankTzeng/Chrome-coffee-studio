@@ -31,8 +31,17 @@
     }
   }
   *{box-sizing:border-box}
-  html{scroll-behavior:smooth}
-  body{margin:0;font-family:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--page);color:var(--page-ink);-webkit-font-smoothing:antialiased}
+  /* No sideways page, ever: the document itself can never grow
+     wider than the screen, so there is nothing to drag sideways
+     into (the blank cream strip Frank's friend found on the
+     right) and fixed elements stay centred on the real screen.
+     overflow:clip — not hidden — so the sticky header and the
+     sticky menu bar keep sticking. The individual overflow
+     sources are clipped at their roots below as well (the logo
+     sheen, the splash centring, the visit gallery), so the page
+     is correct even where clip is unsupported. */
+  html{scroll-behavior:smooth;overflow-x:clip}
+  body{margin:0;font-family:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--page);color:var(--page-ink);-webkit-font-smoothing:antialiased;overflow-x:clip;overscroll-behavior-x:none}
   button,[role="button"],a{min-height:36px}
   img,video{display:block;max-width:100%}
   a{color:inherit}
@@ -68,14 +77,22 @@
      and COFFEE STUDIO never changes. Plays once, then holds on the
      finished flat logo. Every layer is transparent, so the artwork
      sits directly on the marble rail — no box, no white rectangle. */
-  .logo-stage{position:relative;width:100%;aspect-ratio:1000/396}
+  /* overflow:clip on the stage: the sheen layer below travels
+     ±105% of the logo's width during the animation and parks at
+     +105% — on portrait phones (whose header sets
+     overflow:visible) that parked sheen used to spill ~200px
+     past the right edge of the screen and silently widen the
+     whole page. Clipped to the stage, it can never escape; the
+     visible effect is unchanged, since the sheen only ever
+     shows through the letter shapes inside the stage anyway. */
+  .logo-stage{position:relative;width:100%;aspect-ratio:1000/396;overflow:clip}
   .logo-stage img{display:block}
   .logo-studio-l{position:absolute;left:0;top:64.14%;width:100%;height:auto}
   .logo-outline-l,.logo-white-l{position:absolute;left:0;top:0;width:100%;height:auto}
   .logo-outline-l{animation:logoOutline 3s ease .15s both}
   .logo-white-l{animation:logoWhite 3s ease .15s both}
   .logo-chrome-clip{
-    position:absolute;left:0;top:0;width:100%;height:64.14%;
+    position:absolute;left:0;top:0;width:100%;height:64.14%;overflow:clip;
     animation:logoChrome 3s cubic-bezier(.6,.05,.3,1) .15s both;
   }
   .logo-chrome-clip img{width:100%;height:100%;filter:brightness(1.06) saturate(.9)}
@@ -233,8 +250,18 @@
      once the signature sequence has scrolled away, so it never
      sits over the menu or visit text. Purely decorative — it
      never takes clicks. */
+  /* Centring: left offset for the rail + right:0 + auto margins —
+     deliberately NOT calc() with 100vw. On some Android browsers
+     100vw (and a percentage left on a fixed element) resolves
+     against the layout viewport, which any stray sideways
+     overflow widens beyond the visible screen — that is what
+     dragged this splash toward the right edge on Frank's
+     friend's phone. Pinned between the rail's edge and the
+     screen's right edge with auto margins, it centres on the
+     drinks column whatever the browser thinks the page width
+     is. Each layout below only restates the left offset. */
   .splash-fixed{
-    position:fixed;top:62px;left:calc(324px + (100vw - 324px)/2);transform:translateX(-50%);
+    position:fixed;top:62px;left:324px;right:0;margin-left:auto;margin-right:auto;
     z-index:20;pointer-events:none;
     width:181.5px;height:auto;
     filter:drop-shadow(0 10px 14px rgba(24,14,4,.28)) drop-shadow(0 2px 3px rgba(24,14,4,.20));
@@ -465,9 +492,9 @@
      natural aspect ratio (fixed strip height, auto width, no crop,
      no stretch), and the strip is sized so the next photo peeks in
      at the edge as the scroll hint. */
-  .visit-gallery-wrap{margin-top:34px;min-width:0}
+  .visit-gallery-wrap{margin-top:34px;min-width:0;max-width:100%}
   .visit-gallery{
-    display:flex;gap:14px;
+    display:flex;gap:14px;max-width:100%;
     height:clamp(280px,72vw,380px);
     overflow-x:auto;overflow-y:hidden;
     scroll-snap-type:x mandatory;
@@ -627,7 +654,7 @@
        (326px–414px) touches neither — its droplet and spike
        clear the heading's letters, and its drip tip clears
        the photo. */
-    .splash-fixed{width:94.4px;top:326px;left:50%}
+    .splash-fixed{width:94.4px;top:326px;left:0;right:0}
   }
 
   /* ============ PHONE LANDSCAPE = LAPTOP LAYOUT, COMPACT ============
@@ -662,7 +689,7 @@
     .visit-gallery{height:260px}
     /* splash centred over the drinks column, in the band between
        the heading and the photo */
-    .splash-fixed{width:111.3px;top:31px;left:calc(184px + (100vw - 184px)/2)}
+    .splash-fixed{width:111.3px;top:31px;left:184px;right:0}
   }
   /* Wider landscape screens (tablets / small laptops): keep the full
      rail, only the short-height drink tightening above is skipped. */
@@ -670,7 +697,7 @@
     .rail{width:324px;padding:22px 24px 16px}
     .logo-wrap{width:88%}
     main{margin-left:324px}
-    .splash-fixed{left:calc(324px + (100vw - 324px)/2)}
+    .splash-fixed{left:324px;right:0}
     /* wide enough not to be cramped: full rail content returns */
     .rail-collapsible{display:block}
     .side-nav{display:none}
