@@ -1188,6 +1188,11 @@ if(sigWrap&&sigToggle){
   sigToggle.addEventListener('click',function(){
     var open=sigWrap.classList.toggle('open');
     sigToggle.setAttribute('aria-expanded',open?'true':'false');
+    /* Same tap also jumps to the very top of the Signature
+       Items section, mirroring the Full Menu / Visit Us rail
+       anchors (html{scroll-behavior:smooth} carries the jump). */
+    var seq=document.getElementById('sequence');
+    if(seq)seq.scrollIntoView({block:'start'});
   });
 }
 
@@ -1242,6 +1247,8 @@ sideNavBtns.forEach(function(b){
     if(v==='signatures'&&document.body.classList.contains('view-signatures')&&sideSigWrap){
       var sigOpenNow=sideSigWrap.classList.toggle('open');
       if(sideSigBtn)sideSigBtn.setAttribute('aria-expanded',sigOpenNow?'true':'false');
+      /* …and return the scroll to the very top, as setView does. */
+      window.scrollTo(0,0);
       return;
     }
     setView(v);
