@@ -64,54 +64,37 @@
     overflow-y:auto;overscroll-behavior:contain;
   }
   .logo-wrap{position:relative;flex:0 0 auto;width:100%}
-  /* Logo: the white-to-chrome sequence, done on the FLAT logo.
-     The earlier clip had been rendered off a curved cup shot, so
-     its letters came out warped — arched like they were wrapping
-     around the cup. This version stacks the flat logo's own layers
-     (all cut from the original flat artwork, assets/logo.png):
-     outline, white fill, and the original rendered chrome fill
-     with its real reflections and drips. Same sequence as before —
-     outline first, white fill, then a sheen passes and the chrome
-     fills the letters left to right, bright silver grade — but the
-     letterforms stay exactly as flat and straight as the original,
-     and COFFEE STUDIO never changes. Plays once, then holds on the
-     finished flat logo. Every layer is transparent, so the artwork
-     sits directly on the marble rail — no box, no white rectangle. */
-  /* overflow:clip on the stage: the sheen layer below travels
-     ±105% of the logo's width during the animation and parks at
-     +105% — on portrait phones (whose header sets
-     overflow:visible) that parked sheen used to spill ~200px
-     past the right edge of the screen and silently widen the
-     whole page. Clipped to the stage, it can never escape; the
-     visible effect is unchanged, since the sheen only ever
-     shows through the letter shapes inside the stage anyway. */
-  .logo-stage{position:relative;width:100%;aspect-ratio:1000/396;overflow:clip}
+  /* Logo: the shop's OWN approved artwork (Frank, 2026-11-26) —
+     the hollow-outline bubble "chrome" over solid bold "COFFEE
+     STUDIO", the shop's black artwork keyed off the white
+     background of the file Frank supplied: fully transparent,
+     no box, no halo, original black colouring and exact
+     letterforms, never re-rendered or inverted. The liquid-
+     chrome sheen/material sequence is REMOVED entirely — in its
+     place is Frank's letter-drop: each of the six letters of
+     "chrome" is its own full-stage transparent layer (the six
+     layers partition the keyed artwork exactly, so at rest the
+     recomposed word is pixel-identical to the original), and on
+     page load the letters drop in one by one, staggered, each
+     with a slight settle. COFFEE STUDIO is a single static
+     layer that simply fades in. Plays once per page load.
+     overflow:clip on the stage stays: a dropping letter can
+     never spill outside the logo box, so the old sheen's
+     page-widening overflow bug stays fixed by construction. */
+  .logo-stage{position:relative;width:100%;aspect-ratio:1100/411;overflow:clip}
   .logo-stage img{display:block}
-  .logo-studio-l{position:absolute;left:0;top:64.14%;width:100%;height:auto}
-  .logo-outline-l,.logo-white-l{position:absolute;left:0;top:0;width:100%;height:auto}
-  .logo-outline-l{animation:logoOutline 3s ease .15s both}
-  .logo-white-l{animation:logoWhite 3s ease .15s both}
-  .logo-chrome-clip{
-    position:absolute;left:0;top:0;width:100%;height:64.14%;overflow:clip;
-    animation:logoChrome 3s cubic-bezier(.6,.05,.3,1) .15s both;
+  .logo-letter,.logo-studio-text{position:absolute;inset:0;width:100%;height:100%}
+  .logo-letter{opacity:0;animation:logoDrop .62s cubic-bezier(.28,.84,.42,1) both;animation-delay:calc(var(--i)*.11s + .15s)}
+  .logo-studio-text{opacity:0;animation:logoFade .7s ease .55s both}
+  @keyframes logoDrop{
+    0%{opacity:0;transform:translateY(-13%)}
+    55%{opacity:1}
+    78%{transform:translateY(1.6%)}
+    100%{opacity:1;transform:translateY(0)}
   }
-  .logo-chrome-clip img{width:100%;height:100%;filter:brightness(1.06) saturate(.9)}
-  /* the sheen is masked by the flat letter silhouette itself, so
-     the light only ever travels inside the word "chrome" */
-  .logo-sheen{
-    position:absolute;inset:0;pointer-events:none;
-    background:linear-gradient(100deg,transparent 42%,rgba(255,255,255,.95) 50%,transparent 58%);
-    -webkit-mask:url("assets/logo-chrome-white.png") 0 0 / 100% 100% no-repeat;
-    mask:url("assets/logo-chrome-white.png") 0 0 / 100% 100% no-repeat;
-    animation:logoSheen 3s ease .15s both;
-  }
-  @keyframes logoOutline{0%{opacity:0}16%{opacity:1}100%{opacity:1}}
-  @keyframes logoWhite{0%,20%{opacity:0}42%{opacity:1}100%{opacity:1}}
-  @keyframes logoChrome{0%,42%{clip-path:inset(-2% 100.5% -2% -2%)}90%,100%{clip-path:inset(-2% -2% -2% -2%)}}
-  @keyframes logoSheen{0%,42%{transform:translateX(-105%);opacity:0}50%{opacity:.85}84%{opacity:.85}90%,100%{transform:translateX(105%);opacity:0}}
+  @keyframes logoFade{from{opacity:0}to{opacity:1}}
   @media (prefers-reduced-motion: reduce){
-    .logo-outline-l,.logo-white-l,.logo-chrome-clip,.logo-sheen{animation:none}
-    .logo-sheen{display:none}
+    .logo-letter,.logo-studio-text{animation:none;opacity:1}
   }
   /* Instagram entry in the rail link list: the Sodam treatment —
      the real-colour gradient glyph (yellow → orange → pink →
@@ -165,6 +148,15 @@
   .side-sub{display:none;flex-direction:column;gap:3px;margin:1px 0 3px 16px}
   .side-sub-wrap.open .side-sub{display:flex}
   .side-sub button{min-height:38px;padding:6px 10px;font-size:.82rem;font-weight:600;border-radius:9px}
+  /* Signature Items expands in the sideways nav the same way
+     Full Menu does (Frank, 2026-11-26): its seven drinks nest
+     under the entry in the Full Menu's row style — small photo
+     + name — with NO prices in this list (the prices live on
+     the slides and in the Full Menu). Tapping a drink switches
+     to the signature view and scrolls to that drink's slide. */
+  .side-sub button.sig-item{gap:8px;align-items:center;min-height:40px}
+  .side-sub button.sig-item img{width:30px;height:30px;border-radius:8px;object-fit:cover;flex:0 0 auto;box-shadow:0 3px 8px rgba(4,5,7,.25)}
+  .side-sub button.sig-item.active{background:rgba(255,255,255,.55);border-color:var(--rail-line)}
   /* Sideways view switching: only while body.is-sideways (a real
      short landscape screen) does the chosen entry filter what the
      right side shows. Everywhere else all sections stay in the
@@ -208,6 +200,32 @@
   .sig-link.active{background:rgba(255,255,255,.55);border-color:var(--rail-line)}
   .swatch{width:18px;height:18px;border-radius:50%;flex:0 0 auto;border:1px solid rgba(23,21,18,.25)}
   .sig-link .p{margin-left:auto;font-family:"Cormorant Garamond",serif;font-size:1.08rem;font-weight:600}
+  /* Signature Items in the desktop rail is an expander now, like
+     Full Menu in the sideways nav (Frank, 2026-11-26): the old
+     always-open "Signatures — on the plaque" list gives way to a
+     "Signature Items" button with a caret; the seven drinks sit
+     in a dropdown under it, in the Full Menu's row style —
+     small photo + name — with NO prices anywhere in this list.
+     It starts open (the rail has the room, and the scroll-spy
+     highlight stays visible); clicking the button collapses or
+     re-opens it. Left rail only — nothing on the right changes. */
+  .sig-wrap{display:flex;flex-direction:column}
+  .sig-toggle{
+    display:flex;align-items:center;gap:9px;width:100%;cursor:pointer;
+    border:1px solid transparent;border-radius:11px;background:transparent;
+    color:inherit;font:inherit;font-size:.93rem;font-weight:700;text-align:left;
+    padding:7px 11px;min-height:40px;
+  }
+  .sig-toggle:hover{background:rgba(255,255,255,.35)}
+  .sig-toggle .caret{
+    margin-left:auto;flex:0 0 auto;width:7px;height:7px;
+    border-right:2px solid currentColor;border-bottom:2px solid currentColor;
+    transform:rotate(-45deg);opacity:.55;transition:transform .2s ease;
+  }
+  .sig-wrap.open .sig-toggle .caret{transform:rotate(45deg)}
+  .sig-wrap .sig-list{display:none;margin-top:2px}
+  .sig-wrap.open .sig-list{display:flex}
+  .sig-thumb{width:34px;height:34px;border-radius:9px;object-fit:cover;flex:0 0 auto;box-shadow:0 3px 8px rgba(4,5,7,.25)}
   .rail-links{list-style:none;margin:12px 0 0;padding:8px 0 0;border-top:1px solid var(--rail-line);display:flex;flex-direction:column;gap:2px}
   .rail-links a{
     display:flex;align-items:center;justify-content:space-between;
@@ -713,14 +731,14 @@
 <aside class="rail" id="rail">
   <div class="rail-top">
     <div class="logo-wrap">
-      <div class="logo-stage" role="img" aria-label="Chrome Coffee Studio — chrome fills from white into rendered metal chrome">
-        <img class="logo-studio-l" src="assets/logo-studio.png" alt="" width="1000" height="142" />
-        <img class="logo-outline-l" src="assets/logo-chrome-outline.png" alt="" width="1000" height="254" />
-        <img class="logo-white-l" src="assets/logo-chrome-white.png" alt="" width="1000" height="254" />
-        <div class="logo-chrome-clip">
-          <img src="assets/logo-chrome.png" alt="" width="1000" height="254" />
-          <span class="logo-sheen" aria-hidden="true"></span>
-        </div>
+      <div class="logo-stage" role="img" aria-label="Chrome Coffee Studio">
+        <img class="logo-letter" style="--i:0" src="assets/logo-letter-c.png" alt="" width="1100" height="411" />
+        <img class="logo-letter" style="--i:1" src="assets/logo-letter-h.png" alt="" width="1100" height="411" />
+        <img class="logo-letter" style="--i:2" src="assets/logo-letter-r.png" alt="" width="1100" height="411" />
+        <img class="logo-letter" style="--i:3" src="assets/logo-letter-o.png" alt="" width="1100" height="411" />
+        <img class="logo-letter" style="--i:4" src="assets/logo-letter-m.png" alt="" width="1100" height="411" />
+        <img class="logo-letter" style="--i:5" src="assets/logo-letter-e.png" alt="" width="1100" height="411" />
+        <img class="logo-studio-text" src="assets/logo-studio-text.png" alt="" width="1100" height="411" />
       </div>
     </div>
     <div class="rail-head-meta">
@@ -740,7 +758,18 @@
   </div>
 
   <nav class="side-nav" id="sideNav" aria-label="Sideways view">
-    <button type="button" data-view="signatures" class="active" aria-pressed="true">Signature Items</button>
+    <div class="side-sub-wrap open" id="sideSigWrap">
+      <button type="button" data-view="signatures" id="sideSigBtn" class="active" aria-pressed="true" aria-expanded="true" aria-controls="sideSigSub">Signature Items<span class="caret" aria-hidden="true"></span></button>
+      <div class="side-sub" id="sideSigSub" role="group" aria-label="Signature drinks">
+        <button type="button" class="sig-item" data-sig-target="chrome-latte"><img src="assets/menu-thumbs/chrome-latte.jpg" alt="" width="96" height="96" loading="lazy" />Chrome Latte</button>
+        <button type="button" class="sig-item" data-sig-target="cream-top"><img src="assets/menu-thumbs/cream-top.jpg" alt="" width="96" height="96" loading="lazy" />Cream Top</button>
+        <button type="button" class="sig-item" data-sig-target="coldbrew-latte"><img src="assets/menu-thumbs/coldbrew-latte.jpg" alt="" width="96" height="96" loading="lazy" />Coldbrew Latte</button>
+        <button type="button" class="sig-item" data-sig-target="banana-cream-latte"><img src="assets/menu-thumbs/banana-cream-latte.jpg" alt="" width="96" height="96" loading="lazy" />Banana Cream Latte</button>
+        <button type="button" class="sig-item" data-sig-target="espresso-matcha"><img src="assets/menu-thumbs/espresso-matcha.jpg" alt="" width="96" height="96" loading="lazy" />Espresso Matcha</button>
+        <button type="button" class="sig-item" data-sig-target="coconut-matcha"><img src="assets/menu-thumbs/coconut-matcha.jpg" alt="" width="96" height="96" loading="lazy" />Coconut Matcha</button>
+        <button type="button" class="sig-item" data-sig-target="mocha-creamtop"><img src="assets/menu-thumbs/mocha-creamtop.jpg" alt="" width="96" height="96" loading="lazy" />Mocha Creamtop</button>
+      </div>
+    </div>
     <div class="side-sub-wrap" id="sideMenuWrap">
       <button type="button" data-view="menu" id="sideMenuBtn" aria-pressed="false" aria-expanded="false" aria-controls="sideMenuSub">Full Menu<span class="caret" aria-hidden="true"></span></button>
       <div class="side-sub" id="sideMenuSub" role="group" aria-label="Full Menu categories">
@@ -772,16 +801,18 @@
       </div>
     </div>
     <nav class="rail-nav" aria-label="Signature drinks">
-      <p class="rail-label">Signatures — on the plaque</p>
-      <ul class="sig-list">
-        <li><a class="sig-link" href="#chrome-latte" data-target="chrome-latte"><span class="swatch" style="background:#c2a287"></span>Chrome Latte<span class="p">$6.50</span></a></li>
-        <li><a class="sig-link" href="#cream-top" data-target="cream-top"><span class="swatch" style="background:#e7d7c3"></span>Cream Top<span class="p">$5.50</span></a></li>
-        <li><a class="sig-link" href="#coldbrew-latte" data-target="coldbrew-latte"><span class="swatch" style="background:#5d3320"></span>Coldbrew Latte<span class="p">$6.00</span></a></li>
-        <li><a class="sig-link" href="#banana-cream-latte" data-target="banana-cream-latte"><span class="swatch" style="background:#e7d7c3"></span>Banana Cream Latte<span class="p">$7.00</span></a></li>
-        <li><a class="sig-link" href="#espresso-matcha" data-target="espresso-matcha"><span class="swatch" style="background:#4e2e20"></span>Espresso Matcha<span class="p">—</span></a></li>
-        <li><a class="sig-link" href="#coconut-matcha" data-target="coconut-matcha"><span class="swatch" style="background:#9ab58a"></span>Coconut Matcha<span class="p">$7.00</span></a></li>
-        <li><a class="sig-link" href="#mocha-creamtop" data-target="mocha-creamtop"><span class="swatch" style="background:#a67a58"></span>Mocha Creamtop<span class="p">—</span></a></li>
-      </ul>
+      <div class="sig-wrap open" id="sigWrap">
+        <button type="button" class="sig-toggle" id="sigToggle" aria-expanded="true" aria-controls="sigList">Signature Items<span class="caret" aria-hidden="true"></span></button>
+        <ul class="sig-list" id="sigList">
+          <li><a class="sig-link" href="#chrome-latte" data-target="chrome-latte"><img class="sig-thumb" src="assets/menu-thumbs/chrome-latte.jpg" alt="" width="96" height="96" loading="lazy" />Chrome Latte</a></li>
+          <li><a class="sig-link" href="#cream-top" data-target="cream-top"><img class="sig-thumb" src="assets/menu-thumbs/cream-top.jpg" alt="" width="96" height="96" loading="lazy" />Cream Top</a></li>
+          <li><a class="sig-link" href="#coldbrew-latte" data-target="coldbrew-latte"><img class="sig-thumb" src="assets/menu-thumbs/coldbrew-latte.jpg" alt="" width="96" height="96" loading="lazy" />Coldbrew Latte</a></li>
+          <li><a class="sig-link" href="#banana-cream-latte" data-target="banana-cream-latte"><img class="sig-thumb" src="assets/menu-thumbs/banana-cream-latte.jpg" alt="" width="96" height="96" loading="lazy" />Banana Cream Latte</a></li>
+          <li><a class="sig-link" href="#espresso-matcha" data-target="espresso-matcha"><img class="sig-thumb" src="assets/menu-thumbs/espresso-matcha.jpg" alt="" width="96" height="96" loading="lazy" />Espresso Matcha</a></li>
+          <li><a class="sig-link" href="#coconut-matcha" data-target="coconut-matcha"><img class="sig-thumb" src="assets/menu-thumbs/coconut-matcha.jpg" alt="" width="96" height="96" loading="lazy" />Coconut Matcha</a></li>
+          <li><a class="sig-link" href="#mocha-creamtop" data-target="mocha-creamtop"><img class="sig-thumb" src="assets/menu-thumbs/mocha-creamtop.jpg" alt="" width="96" height="96" loading="lazy" />Mocha Creamtop</a></li>
+        </ul>
+      </div>
       <ul class="rail-links">
         <li><a href="#menu">Full menu <span>→</span></a></li>
         <li><a href="#visit">Visit us <span>→</span></a></li>
@@ -1143,10 +1174,22 @@ function syncRailToOrientation(){if(!isPortraitPhone())closeRail();}
 window.addEventListener('orientationchange',function(){setTimeout(syncRailToOrientation,60);});
 window.addEventListener('resize',syncRailToOrientation);
 
-/* Logo: the white-to-chrome sequence is pure CSS on the flat
-   logo's layers (see .logo-stage) — it plays once on load, then
-   holds on the finished chrome; reduced-motion visitors get the
-   finished logo with no animation. */
+/* Logo: the letter-drop is pure CSS on the approved artwork's
+   layers (see .logo-stage) — the letters of "chrome" drop in
+   once on load, staggered, then hold; reduced-motion visitors
+   get the finished logo with no animation. No script needed. */
+
+/* Desktop rail: Signature Items expander — the button toggles
+   its drink dropdown open/shut; the links inside keep their
+   normal anchor jump to each drink's slide. */
+var sigWrap=document.getElementById('sigWrap');
+var sigToggle=document.getElementById('sigToggle');
+if(sigWrap&&sigToggle){
+  sigToggle.addEventListener('click',function(){
+    var open=sigWrap.classList.toggle('open');
+    sigToggle.setAttribute('aria-expanded',open?'true':'false');
+  });
+}
 
 /* Sideways three-entry nav: active only in the sideways layout
    (a real short landscape phone screen).
@@ -1158,6 +1201,9 @@ var sideNavBtns=[].slice.call(document.querySelectorAll('#sideNav button[data-vi
 var sideMenuWrap=document.getElementById('sideMenuWrap');
 var sideMenuBtn=document.getElementById('sideMenuBtn');
 var sideSubBtns=[].slice.call(document.querySelectorAll('#sideNav button[data-menu-group]'));
+var sideSigWrap=document.getElementById('sideSigWrap');
+var sideSigBtn=document.getElementById('sideSigBtn');
+var sigItemBtns=[].slice.call(document.querySelectorAll('#sideNav button[data-sig-target]'));
 function setView(name,noScroll){
   document.body.classList.remove('view-signatures','view-menu','view-visit');
   document.body.classList.add('view-'+name);
@@ -1172,6 +1218,13 @@ function setView(name,noScroll){
   if(sideMenuWrap)sideMenuWrap.classList.toggle('open',menuOpen);
   if(sideMenuBtn)sideMenuBtn.setAttribute('aria-expanded',menuOpen?'true':'false');
   if(!menuOpen)sideSubBtns.forEach(function(b){b.classList.remove('active');});
+  /* Signature Items' drink list rides along with the signature
+     view the same way: entering it expands the list, leaving
+     it collapses it. */
+  var sigListOpen=name==='signatures';
+  if(sideSigWrap)sideSigWrap.classList.toggle('open',sigListOpen);
+  if(sideSigBtn)sideSigBtn.setAttribute('aria-expanded',sigListOpen?'true':'false');
+  if(!sigListOpen)sigItemBtns.forEach(function(b){b.classList.remove('active');});
   if(!noScroll)window.scrollTo(0,0);
 }
 sideNavBtns.forEach(function(b){
@@ -1182,6 +1235,13 @@ sideNavBtns.forEach(function(b){
     if(v==='menu'&&document.body.classList.contains('view-menu')&&sideMenuWrap){
       var open=sideMenuWrap.classList.toggle('open');
       if(sideMenuBtn)sideMenuBtn.setAttribute('aria-expanded',open?'true':'false');
+      return;
+    }
+    /* Already in the signature view: Signature Items acts as
+       the expander toggle for its drink list, the same way. */
+    if(v==='signatures'&&document.body.classList.contains('view-signatures')&&sideSigWrap){
+      var sigOpenNow=sideSigWrap.classList.toggle('open');
+      if(sideSigBtn)sideSigBtn.setAttribute('aria-expanded',sigOpenNow?'true':'false');
       return;
     }
     setView(v);
@@ -1197,6 +1257,17 @@ sideSubBtns.forEach(function(b){
     sideSubBtns.forEach(function(x){x.classList.toggle('active',x===b);});
     var g=document.getElementById(b.getAttribute('data-menu-group'));
     if(g)requestAnimationFrame(function(){g.scrollIntoView({block:'start'});});
+  });
+});
+/* Signature drink entries: switch to the signature view (which
+   expands the list), then land on the chosen drink's slide —
+   the sideways counterpart of the desktop rail's sig links. */
+sigItemBtns.forEach(function(b){
+  b.addEventListener('click',function(){
+    setView('signatures',true);
+    sigItemBtns.forEach(function(x){x.classList.toggle('active',x===b);});
+    var d=document.getElementById(b.getAttribute('data-sig-target'));
+    if(d)requestAnimationFrame(function(){d.scrollIntoView({block:'start'});});
   });
 });
 var landscapeMq=window.matchMedia('(orientation: landscape) and (max-height: 560px) and (max-width: 1099px)');
